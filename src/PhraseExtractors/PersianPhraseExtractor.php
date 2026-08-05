@@ -6,6 +6,7 @@ namespace PersianKeyword\PhraseExtractors;
 
 use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextTokenizer;
+use PersianKeyword\Exceptions\InvalidConfiguration;
 
 final class PersianPhraseExtractor implements PhraseExtractor
 {
@@ -14,6 +15,9 @@ final class PersianPhraseExtractor implements PhraseExtractor
         private readonly int $minTerms = 2,
         private readonly int $maxTerms = 3,
     ) {
+        if ($this->minTerms < 2 || $this->maxTerms < $this->minTerms) {
+            throw new InvalidConfiguration('Phrase lengths must satisfy: 2 <= min_terms <= max_terms.');
+        }
     }
 
     /**

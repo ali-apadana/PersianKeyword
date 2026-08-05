@@ -58,10 +58,13 @@ final class PersianKeywordEngine implements KeywordExtractor
             (int) ($options['max_keywords'] ?? config('persian-keyword.max_keywords', 10)),
         );
 
-        $entities = [
-            ...$this->entityRecognizer->recognize($normalizedTitle, 'title'),
-            ...$this->entityRecognizer->recognize($normalizedBody, 'body'),
-        ];
+        $detectEntities = $options['detect_entities'] ?? config('persian-keyword.entity_recognition.enabled', true);
+        $entities = $detectEntities
+            ? [
+                ...$this->entityRecognizer->recognize($normalizedTitle, 'title'),
+                ...$this->entityRecognizer->recognize($normalizedBody, 'body'),
+            ]
+            : [];
 
         return new ExtractionResult(
             tokens: [...$titleTokens, ...$bodyTokens],
@@ -76,6 +79,7 @@ final class PersianKeywordEngine implements KeywordExtractor
                 'normalized_body' => $normalizedBody,
                 'title_token_count' => count($titleTokens),
                 'body_token_count' => count($bodyTokens),
+                'entity_recognition_enabled' => $detectEntities,
             ],
         );
     }

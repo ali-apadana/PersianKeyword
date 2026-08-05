@@ -1,8 +1,8 @@
 # PersianKeyword
 
-`ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and named entities from Persian (Farsi) text.
+`ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and dictionary-based named entities from Persian (Farsi) text.
 
-> **0.6.0 adds dictionary-based entity detection.** Extend the entity dictionary with the people, organizations, places, and products relevant to your application.
+**Version 1.0 is stable.** It provides a predictable, Laravel-native API for Persian text processing without requiring an external service.
 
 ## Requirements
 
@@ -35,6 +35,16 @@ $entities = $result->entities();
 
 $array = $result->toArray();
 $json = $result->toJson();
+```
+
+Pass options for a single extraction when needed:
+
+```php
+$result = Keyword::extract($title, $body, [
+    'max_keywords' => 5,
+    'remove_stopwords' => true,
+    'detect_entities' => false,
+]);
 ```
 
 `keywords()` returns the ranked keyword strings. Use `keywordScores()` when you also need each keyword's numeric score and frequency:
@@ -104,6 +114,9 @@ return [
         'body_weight' => 1.0,
         'phrase_boost' => 1.0,
     ],
+    'entity_recognition' => [
+        'enabled' => true,
+    ],
 ];
 ```
 
@@ -118,9 +131,9 @@ composer analyse
 composer format
 ```
 
-## Roadmap
+## Notes
 
-- **1.0:** Stable production release
+Entity detection in 1.0 is dictionary-based. It is fast and deterministic, but it does not infer entities that are absent from the configured dictionary.
 
 ## License
 

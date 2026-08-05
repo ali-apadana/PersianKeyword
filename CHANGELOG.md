@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0] - 2026-08-05
+
+### Added
+
+- Stable public API for normalization, tokenization, phrase extraction, keyword scoring, and dictionary entities.
+- Per-extraction `detect_entities` option and global entity-recognition configuration.
+- Configuration validation for phrase lengths.
+- GitHub Actions quality checks for supported PHP versions.
+- Package export rules for lean release archives.
+
 ## [0.6.0] - 2026-08-05
 
 ### Added

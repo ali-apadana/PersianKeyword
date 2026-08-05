@@ -40,6 +40,10 @@ return [
         'phrase_boost' => 1.0,
     ],
 
+    'entity_recognition' => [
+        'enabled' => true,
+    ],
+
     'resources' => [
         'stopwords' => __DIR__.'/../resources/stopwords.php',
         'prefixes' => __DIR__.'/../resources/prefixes.php',

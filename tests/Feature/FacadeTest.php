@@ -21,4 +21,12 @@ final class FacadeTest extends TestCase
         self::assertSame('نمونه', $result->keywordScores()[0]->keyword());
         self::assertSame([], $result->entities());
     }
+
+    public function test_it_can_disable_entity_recognition_for_one_extraction(): void
+    {
+        $result = Keyword::extract('Laravel در تهران', null, ['detect_entities' => false]);
+
+        self::assertSame([], $result->entities());
+        self::assertFalse($result->meta()['entity_recognition_enabled']);
+    }
 }
