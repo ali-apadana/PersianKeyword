@@ -18,15 +18,24 @@ final class PersianTokenizer implements TextTokenizer
     /** @var array<string, true> */
     private array $stopwords;
 
+    /** @var array<string, true> */
+    private array $compoundPrefixes;
+
     /**
      * @param list<string> $stopwords
+     * @param list<string> $compoundPrefixes
      */
-    public function __construct(array $stopwords = [])
+    public function __construct(array $stopwords = [], array $compoundPrefixes = [])
     {
         $this->stopwords = [];
+        $this->compoundPrefixes = [];
 
         foreach ($stopwords as $stopword) {
             $this->stopwords[$this->lowercase($stopword)] = true;
+        }
+
+        foreach ($compoundPrefixes as $prefix) {
+            $this->compoundPrefixes[$this->lowercase($prefix)] = true;
         }
     }
 
@@ -38,7 +47,7 @@ final class PersianTokenizer implements TextTokenizer
         /** @var list<string> $tokens */
         $tokens = array_map($this->lowercase(...), $matches[0]);
 
-        return $tokens;
+        return $this->mergeModelTokens($tokens);
     }
 
     /**
@@ -75,5 +84,34 @@ final class PersianTokenizer implements TextTokenizer
         return function_exists('mb_strtolower')
             ? mb_strtolower($text, 'UTF-8')
             : strtolower($text);
+    }
+
+    /**
+     * Merge a known model designator followed by a numeric identifier.
+     *
+     * @param list<string> $tokens
+     * @return list<string>
+     */
+    private function mergeModelTokens(array $tokens): array
+    {
+        $merged = [];
+
+        for ($index = 0, $count = count($tokens); $index < $count; $index++) {
+            $token = $tokens[$index];
+            $next = $tokens[$index + 1] ?? null;
+
+            if ($next !== null
+                && isset($this->compoundPrefixes[$token])
+                && preg_match('/^\p{N}+$/u', $next) === 1) {
+                $merged[] = $token.' '.$next;
+                $index++;
+
+                continue;
+            }
+
+            $merged[] = $token;
+        }
+
+        return $merged;
     }
 }

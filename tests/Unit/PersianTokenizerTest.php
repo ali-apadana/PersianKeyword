@@ -65,4 +65,11 @@ final class PersianTokenizerTest extends TestCase
             $tokenizer->withoutStopwords(['نفت', 'یعنی', 'انرژی', 'روز', 'خزر', 'می‌گوید', 'اسرائیل']),
         );
     }
+
+    public function test_it_keeps_known_letter_number_models_as_one_token(): void
+    {
+        $tokenizer = new PersianTokenizer([], ['اف', 'f']);
+
+        self::assertSame(['اف ۳۵', 'f 35'], $tokenizer->tokenize('اف ۳۵ و F-35'));
+    }
 }

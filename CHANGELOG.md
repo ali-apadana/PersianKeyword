@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-08-06
+
+### Added
+
+- Model-designator token merging for Persian and Latin identifiers such as `اف ۳۵` and `F-35`.
+- Initial aircraft entity dictionary entries.
+
 ## [1.3.0] - 2026-08-06
 
 ### Improved

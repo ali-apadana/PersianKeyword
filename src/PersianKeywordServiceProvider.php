@@ -34,8 +34,13 @@ final class PersianKeywordServiceProvider extends ServiceProvider
         $this->app->singleton(TextTokenizer::class, function (): PersianTokenizer {
             /** @var mixed $stopwords */
             $stopwords = require config('persian-keyword.resources.stopwords');
+            /** @var mixed $prefixes */
+            $prefixes = require config('persian-keyword.resources.prefixes');
 
-            return new PersianTokenizer(is_array($stopwords) ? $stopwords : []);
+            return new PersianTokenizer(
+                is_array($stopwords) ? $stopwords : [],
+                is_array($prefixes) ? $prefixes : [],
+            );
         });
 
         $this->app->singleton(PhraseExtractor::class, function ($app): PersianPhraseExtractor {
