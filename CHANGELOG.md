@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-08-05
+
+### Added
+
+- Persian-aware tokenizer with support for Unicode words, numbers, and half-space compounds.
+- Stop-word filtering for the extraction pipeline, enabled by default and configurable per call.
+- `tokens()` on the typed extraction result, plus source token counts in result metadata.
+
 ## [0.1.0] - 2026-08-05
 
 ### Added

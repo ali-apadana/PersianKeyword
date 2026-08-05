@@ -9,17 +9,25 @@ use JsonSerializable;
 final readonly class ExtractionResult implements JsonSerializable
 {
     /**
+     * @param list<string> $tokens
      * @param list<string> $keywords
      * @param list<string> $phrases
      * @param list<array<string, mixed>> $entities
      * @param array<string, mixed> $meta
      */
     public function __construct(
+        private array $tokens = [],
         private array $keywords = [],
         private array $phrases = [],
         private array $entities = [],
         private array $meta = [],
     ) {
+    }
+
+    /** @return list<string> */
+    public function tokens(): array
+    {
+        return $this->tokens;
     }
 
     /** @return list<string> */
@@ -46,10 +54,11 @@ final readonly class ExtractionResult implements JsonSerializable
         return $this->meta;
     }
 
-    /** @return array{keywords: list<string>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
+    /** @return array{tokens: list<string>, keywords: list<string>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
     public function toArray(): array
     {
         return [
+            'tokens' => $this->tokens(),
             'keywords' => $this->keywords(),
             'phrases' => $this->phrases(),
             'entities' => $this->entities(),
@@ -62,7 +71,7 @@ final readonly class ExtractionResult implements JsonSerializable
         return json_encode($this->toArray(), $flags | JSON_THROW_ON_ERROR);
     }
 
-    /** @return array{keywords: list<string>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
+    /** @return array{tokens: list<string>, keywords: list<string>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
     public function jsonSerialize(): array
     {
         return $this->toArray();

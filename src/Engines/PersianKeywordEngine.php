@@ -6,12 +6,15 @@ namespace PersianKeyword\Engines;
 
 use PersianKeyword\Contracts\KeywordExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
+use PersianKeyword\Contracts\TextTokenizer;
 use PersianKeyword\DTO\ExtractionResult;
 
 final class PersianKeywordEngine implements KeywordExtractor
 {
-    public function __construct(private readonly TextNormalizer $normalizer)
-    {
+    public function __construct(
+        private readonly TextNormalizer $normalizer,
+        private readonly TextTokenizer $tokenizer,
+    ) {
     }
 
     /**
@@ -24,11 +27,28 @@ final class PersianKeywordEngine implements KeywordExtractor
     {
         $normalize = $options['normalize'] ?? config('persian-keyword.normalize', true);
 
-        return new ExtractionResult(meta: [
-            'version' => '0.2.0',
-            'status' => 'normalization-ready',
-            'normalized_title' => $normalize ? $this->normalizer->normalize($title) : $title,
-            'normalized_body' => $normalize ? $this->normalizer->normalize($body) : $body,
-        ]);
+        $normalizedTitle = $normalize ? $this->normalizer->normalize($title) : (string) $title;
+        $normalizedBody = $normalize ? $this->normalizer->normalize($body) : (string) $body;
+        $removeStopwords = $options['remove_stopwords'] ?? config('persian-keyword.tokenizer.remove_stopwords', true);
+
+        $titleTokens = $this->tokenizer->tokenize($normalizedTitle);
+        $bodyTokens = $this->tokenizer->tokenize($normalizedBody);
+
+        if ($removeStopwords) {
+            $titleTokens = $this->tokenizer->withoutStopwords($titleTokens);
+            $bodyTokens = $this->tokenizer->withoutStopwords($bodyTokens);
+        }
+
+        return new ExtractionResult(
+            tokens: [...$titleTokens, ...$bodyTokens],
+            meta: [
+                'version' => '0.3.0',
+                'status' => 'tokenization-ready',
+                'normalized_title' => $normalizedTitle,
+                'normalized_body' => $normalizedBody,
+                'title_token_count' => count($titleTokens),
+                'body_token_count' => count($bodyTokens),
+            ],
+        );
     }
 }

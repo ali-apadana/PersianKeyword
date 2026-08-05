@@ -7,8 +7,10 @@ namespace PersianKeyword;
 use Illuminate\Support\ServiceProvider;
 use PersianKeyword\Contracts\KeywordExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
+use PersianKeyword\Contracts\TextTokenizer;
 use PersianKeyword\Engines\PersianKeywordEngine;
 use PersianKeyword\Normalizers\PersianNormalizer;
+use PersianKeyword\Tokenizers\PersianTokenizer;
 
 final class PersianKeywordServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,13 @@ final class PersianKeywordServiceProvider extends ServiceProvider
             $options = config('persian-keyword.normalizer', []);
 
             return new PersianNormalizer($options);
+        });
+
+        $this->app->singleton(TextTokenizer::class, function (): PersianTokenizer {
+            /** @var mixed $stopwords */
+            $stopwords = require config('persian-keyword.resources.stopwords');
+
+            return new PersianTokenizer(is_array($stopwords) ? $stopwords : []);
         });
 
         $this->app->singleton(KeywordExtractor::class, PersianKeywordEngine::class);
