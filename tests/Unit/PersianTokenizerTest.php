@@ -25,4 +25,14 @@ final class PersianTokenizerTest extends TestCase
 
         self::assertSame(['نمونه', 'متن'], $tokenizer->withoutStopwords(['این', 'نمونه', 'متن', 'است']));
     }
+
+    public function test_it_removes_common_news_boilerplate_when_present_in_the_dictionary(): void
+    {
+        $tokenizer = new PersianTokenizer(['اخبار', 'منتشر', 'شده']);
+
+        self::assertSame(
+            ['تخلیه', 'جاسک'],
+            $tokenizer->withoutStopwords(['اخبار', 'تخلیه', 'منتشر', 'شده', 'جاسک']),
+        );
+    }
 }

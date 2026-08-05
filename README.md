@@ -6,6 +6,8 @@
 
 HTML content is supported: tags are removed and entities such as `&zwnj;` and `&nbsp;` are decoded before extraction.
 
+The built-in stop-word dictionary also filters common news boilerplate. You can point `resources.stopwords` at your own PHP list after publishing the configuration if your content needs different rules.
+
 ## Requirements
 
 - PHP 8.2 or later
