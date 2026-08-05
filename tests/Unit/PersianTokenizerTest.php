@@ -45,4 +45,14 @@ final class PersianTokenizerTest extends TestCase
             $tokenizer->withoutStopwords(['شایعه', 'کنند', 'اطلاعیه', 'شده', 'تکذیب', 'است']),
         );
     }
+
+    public function test_it_filters_auxiliary_verb_inflections_with_or_without_a_half_space(): void
+    {
+        $tokenizer = new PersianTokenizer();
+
+        self::assertTrue($tokenizer->isStopword('نیست'));
+        self::assertTrue($tokenizer->isStopword('می‌تواند'));
+        self::assertTrue($tokenizer->isStopword('نمی‌توانند'));
+        self::assertFalse($tokenizer->isStopword('انرژی'));
+    }
 }

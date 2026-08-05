@@ -6,7 +6,7 @@
 
 HTML content is supported: tags are removed and entities such as `&zwnj;` and `&nbsp;` are decoded before extraction.
 
-The built-in stop-word dictionary filters common news boilerplate, conjunctions, pronouns, auxiliary verbs, and frequent non-topical verb forms. You can point `resources.stopwords` at your own PHP list after publishing the configuration if your content needs different rules.
+The built-in stop-word dictionary filters common news boilerplate, conjunctions, pronouns, auxiliary verbs, and frequent non-topical verb forms. Pattern rules also cover inflections such as `می‌تواند` and `نمی‌توانند`. You can point `resources.stopwords` at your own PHP list after publishing the configuration if your content needs different rules.
 
 ## Requirements
 
