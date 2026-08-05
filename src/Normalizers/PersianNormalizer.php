@@ -8,7 +8,7 @@ use PersianKeyword\Contracts\TextNormalizer;
 
 final class PersianNormalizer implements TextNormalizer
 {
-    /** @var array{convert_arabic_characters: bool, convert_digits: bool, remove_diacritics: bool, collapse_whitespace: bool} */
+    /** @var array{decode_html: bool, strip_html: bool, convert_arabic_characters: bool, convert_digits: bool, remove_diacritics: bool, collapse_whitespace: bool} */
     private array $options;
 
     /**
@@ -17,6 +17,8 @@ final class PersianNormalizer implements TextNormalizer
     public function __construct(array $options = [])
     {
         $this->options = array_replace([
+            'decode_html' => true,
+            'strip_html' => true,
             'convert_arabic_characters' => true,
             'convert_digits' => true,
             'remove_diacritics' => true,
@@ -30,8 +32,20 @@ final class PersianNormalizer implements TextNormalizer
             return '';
         }
 
-        $normalized = strtr($text, [
+        $normalized = $text;
+
+        if ($this->options['decode_html']) {
+            $normalized = html_entity_decode($normalized, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        if ($this->options['strip_html']) {
+            // Replace tags with a space so adjacent paragraphs do not become one word.
+            $normalized = preg_replace('/<[^>]+>/u', ' ', $normalized) ?? $normalized;
+        }
+
+        $normalized = strtr($normalized, [
             "\u{0640}" => '', // Arabic tatweel
+            "\u{00A0}" => ' ', // non-breaking space
             "\u{200E}" => '', // left-to-right mark
             "\u{200F}" => '', // right-to-left mark
             "\u{FEFF}" => '', // byte order mark

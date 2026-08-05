@@ -4,6 +4,8 @@
 
 **Version 1.0 is stable.** It provides a predictable, Laravel-native API for Persian text processing without requiring an external service.
 
+HTML content is supported: tags are removed and entities such as `&zwnj;` and `&nbsp;` are decoded before extraction.
+
 ## Requirements
 
 - PHP 8.2 or later
@@ -97,6 +99,8 @@ return [
     'min_keyword_length' => 2,
     'normalize' => true,
     'normalizer' => [
+        'decode_html' => true,
+        'strip_html' => true,
         'convert_arabic_characters' => true,
         'convert_digits' => true,
         'remove_diacritics' => true,

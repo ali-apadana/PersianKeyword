@@ -19,6 +19,8 @@ return [
     'normalize' => true,
 
     'normalizer' => [
+        'decode_html' => true,
+        'strip_html' => true,
         'convert_arabic_characters' => true,
         'convert_digits' => true,
         'remove_diacritics' => true,
