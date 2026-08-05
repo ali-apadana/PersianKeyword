@@ -35,4 +35,14 @@ final class PersianTokenizerTest extends TestCase
             $tokenizer->withoutStopwords(['اخبار', 'تخلیه', 'منتشر', 'شده', 'جاسک']),
         );
     }
+
+    public function test_it_removes_high_frequency_verb_forms_without_removing_news_topics(): void
+    {
+        $tokenizer = new PersianTokenizer(['کنند', 'کردند', 'شده', 'است']);
+
+        self::assertSame(
+            ['شایعه', 'اطلاعیه', 'تکذیب'],
+            $tokenizer->withoutStopwords(['شایعه', 'کنند', 'اطلاعیه', 'شده', 'تکذیب', 'است']),
+        );
+    }
 }

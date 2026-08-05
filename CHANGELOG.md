@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-08-06
+
+### Improved
+
+- Expanded the built-in Persian stop-word dictionary with conjunctions, pronouns, auxiliary verbs, common verb forms, and detached clitics.
+- Filtered non-topical verb forms such as `کنند`, while preserving meaningful news terms such as `شایعه` and `تکذیب`.
+
 ## [1.0.3] - 2026-08-05
 
 ### Improved
