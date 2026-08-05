@@ -29,6 +29,11 @@ return [
         'remove_stopwords' => true,
     ],
 
+    'phrase_extractor' => [
+        'min_terms' => 2,
+        'max_terms' => 3,
+    ],
+
     'resources' => [
         'stopwords' => __DIR__.'/../resources/stopwords.php',
         'prefixes' => __DIR__.'/../resources/prefixes.php',

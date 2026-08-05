@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PersianKeyword\Engines;
 
 use PersianKeyword\Contracts\KeywordExtractor;
+use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
 use PersianKeyword\Contracts\TextTokenizer;
 use PersianKeyword\DTO\ExtractionResult;
@@ -14,6 +15,7 @@ final class PersianKeywordEngine implements KeywordExtractor
     public function __construct(
         private readonly TextNormalizer $normalizer,
         private readonly TextTokenizer $tokenizer,
+        private readonly PhraseExtractor $phraseExtractor,
     ) {
     }
 
@@ -34,6 +36,11 @@ final class PersianKeywordEngine implements KeywordExtractor
         $titleTokens = $this->tokenizer->tokenize($normalizedTitle);
         $bodyTokens = $this->tokenizer->tokenize($normalizedBody);
 
+        $phrases = [
+            ...$this->phraseExtractor->extract($titleTokens),
+            ...$this->phraseExtractor->extract($bodyTokens),
+        ];
+
         if ($removeStopwords) {
             $titleTokens = $this->tokenizer->withoutStopwords($titleTokens);
             $bodyTokens = $this->tokenizer->withoutStopwords($bodyTokens);
@@ -41,9 +48,10 @@ final class PersianKeywordEngine implements KeywordExtractor
 
         return new ExtractionResult(
             tokens: [...$titleTokens, ...$bodyTokens],
+            phrases: array_values(array_unique($phrases)),
             meta: [
-                'version' => '0.3.0',
-                'status' => 'tokenization-ready',
+                'version' => '0.4.0',
+                'status' => 'phrase-extraction-ready',
                 'normalized_title' => $normalizedTitle,
                 'normalized_body' => $normalizedBody,
                 'title_token_count' => count($titleTokens),

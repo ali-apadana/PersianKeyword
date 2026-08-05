@@ -2,7 +2,7 @@
 
 `ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and named entities from Persian (Farsi) text.
 
-> **0.3.0 adds Persian tokenization.** Keyword scoring and phrase extraction are still planned for later releases.
+> **0.4.0 adds Persian phrase extraction.** Keyword scoring is planned for the next release.
 
 ## Requirements
 
@@ -50,6 +50,8 @@ By default, `tokens()` removes the package stop words. Preserve them for a speci
 $result = Keyword::extract($title, $body, ['remove_stopwords' => false]);
 ```
 
+`phrases()` returns unique two- and three-term candidates, such as `آموزش لاراول` and `برنامه نویسی لاراول`. A phrase never spans a stop word.
+
 You can also use the service directly:
 
 ```php
@@ -74,6 +76,10 @@ return [
     'tokenizer' => [
         'remove_stopwords' => true,
     ],
+    'phrase_extractor' => [
+        'min_terms' => 2,
+        'max_terms' => 3,
+    ],
 ];
 ```
 
@@ -88,7 +94,6 @@ composer format
 
 ## Roadmap
 
-- **0.4:** Phrase extraction
 - **0.5:** Keyword scoring engine
 - **0.6:** Entity detection
 - **1.0:** Stable production release

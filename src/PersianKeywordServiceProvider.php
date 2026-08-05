@@ -6,10 +6,12 @@ namespace PersianKeyword;
 
 use Illuminate\Support\ServiceProvider;
 use PersianKeyword\Contracts\KeywordExtractor;
+use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
 use PersianKeyword\Contracts\TextTokenizer;
 use PersianKeyword\Engines\PersianKeywordEngine;
 use PersianKeyword\Normalizers\PersianNormalizer;
+use PersianKeyword\PhraseExtractors\PersianPhraseExtractor;
 use PersianKeyword\Tokenizers\PersianTokenizer;
 
 final class PersianKeywordServiceProvider extends ServiceProvider
@@ -30,6 +32,17 @@ final class PersianKeywordServiceProvider extends ServiceProvider
             $stopwords = require config('persian-keyword.resources.stopwords');
 
             return new PersianTokenizer(is_array($stopwords) ? $stopwords : []);
+        });
+
+        $this->app->singleton(PhraseExtractor::class, function ($app): PersianPhraseExtractor {
+            /** @var array{min_terms?: int, max_terms?: int} $options */
+            $options = config('persian-keyword.phrase_extractor', []);
+
+            return new PersianPhraseExtractor(
+                tokenizer: $app->make(TextTokenizer::class),
+                minTerms: $options['min_terms'] ?? 2,
+                maxTerms: $options['max_terms'] ?? 3,
+            );
         });
 
         $this->app->singleton(KeywordExtractor::class, PersianKeywordEngine::class);

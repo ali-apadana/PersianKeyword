@@ -14,4 +14,6 @@ interface TextTokenizer
      * @return list<string>
      */
     public function withoutStopwords(array $tokens): array;
+
+    public function isStopword(string $token): bool;
 }

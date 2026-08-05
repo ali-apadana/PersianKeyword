@@ -46,6 +46,11 @@ final class PersianTokenizer implements TextTokenizer
         ));
     }
 
+    public function isStopword(string $token): bool
+    {
+        return isset($this->stopwords[$this->lowercase($token)]);
+    }
+
     private function lowercase(string $text): string
     {
         return function_exists('mb_strtolower')
