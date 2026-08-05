@@ -7,6 +7,8 @@ namespace PersianKeyword;
 use Illuminate\Support\ServiceProvider;
 use PersianKeyword\Contracts\KeywordExtractor;
 use PersianKeyword\Contracts\KeywordScorer;
+use PersianKeyword\Contracts\EntityRecognizer;
+use PersianKeyword\Engines\DictionaryEntityRecognizer;
 use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
 use PersianKeyword\Contracts\TextTokenizer;
@@ -55,6 +57,13 @@ final class PersianKeywordServiceProvider extends ServiceProvider
                 $options,
                 (int) config('persian-keyword.min_keyword_length', 2),
             );
+        });
+
+        $this->app->singleton(EntityRecognizer::class, function (): DictionaryEntityRecognizer {
+            /** @var mixed $entities */
+            $entities = require config('persian-keyword.resources.entities');
+
+            return new DictionaryEntityRecognizer(is_array($entities) ? $entities : []);
         });
 
         $this->app->singleton(KeywordExtractor::class, PersianKeywordEngine::class);

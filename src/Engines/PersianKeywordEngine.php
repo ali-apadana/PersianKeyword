@@ -6,6 +6,7 @@ namespace PersianKeyword\Engines;
 
 use PersianKeyword\Contracts\KeywordExtractor;
 use PersianKeyword\Contracts\KeywordScorer;
+use PersianKeyword\Contracts\EntityRecognizer;
 use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
 use PersianKeyword\Contracts\TextTokenizer;
@@ -19,6 +20,7 @@ final class PersianKeywordEngine implements KeywordExtractor
         private readonly TextTokenizer $tokenizer,
         private readonly PhraseExtractor $phraseExtractor,
         private readonly KeywordScorer $scorer,
+        private readonly EntityRecognizer $entityRecognizer,
     ) {
     }
 
@@ -56,14 +58,20 @@ final class PersianKeywordEngine implements KeywordExtractor
             (int) ($options['max_keywords'] ?? config('persian-keyword.max_keywords', 10)),
         );
 
+        $entities = [
+            ...$this->entityRecognizer->recognize($normalizedTitle, 'title'),
+            ...$this->entityRecognizer->recognize($normalizedBody, 'body'),
+        ];
+
         return new ExtractionResult(
             tokens: [...$titleTokens, ...$bodyTokens],
             keywords: array_map(static fn (KeywordScore $score): string => $score->keyword(), $keywordScores),
             keywordScores: $keywordScores,
             phrases: array_values(array_unique($phrases)),
+            entities: $entities,
             meta: [
-                'version' => '0.5.0',
-                'status' => 'keyword-scoring-ready',
+                'version' => '0.6.0',
+                'status' => 'entity-detection-ready',
                 'normalized_title' => $normalizedTitle,
                 'normalized_body' => $normalizedBody,
                 'title_token_count' => count($titleTokens),

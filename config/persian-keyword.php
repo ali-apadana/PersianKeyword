@@ -43,5 +43,6 @@ return [
     'resources' => [
         'stopwords' => __DIR__.'/../resources/stopwords.php',
         'prefixes' => __DIR__.'/../resources/prefixes.php',
+        'entities' => __DIR__.'/../resources/entities.php',
     ],
 ];

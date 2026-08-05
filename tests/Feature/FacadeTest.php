@@ -19,5 +19,6 @@ final class FacadeTest extends TestCase
         self::assertSame('phrase-extraction-ready', $result->meta()['status']);
         self::assertSame('نمونه عنوان', $result->meta()['normalized_title']);
         self::assertSame('نمونه', $result->keywordScores()[0]->keyword());
+        self::assertSame([], $result->entities());
     }
 }

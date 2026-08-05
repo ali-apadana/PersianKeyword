@@ -2,7 +2,7 @@
 
 `ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and named entities from Persian (Farsi) text.
 
-> **0.5.0 adds keyword scoring.** Results are now ranked using frequency, title presence, and phrase membership.
+> **0.6.0 adds dictionary-based entity detection.** Extend the entity dictionary with the people, organizations, places, and products relevant to your application.
 
 ## Requirements
 
@@ -43,6 +43,16 @@ $json = $result->toJson();
 foreach ($result->keywordScores() as $keyword) {
     echo $keyword->keyword();
     echo $keyword->score();
+}
+```
+
+Each detected entity records its name, type, and whether it came from the title or body:
+
+```php
+foreach ($result->entities() as $entity) {
+    echo $entity->name();   // e.g. تهران
+    echo $entity->type();   // e.g. location
+    echo $entity->source(); // title or body
 }
 ```
 
@@ -97,6 +107,8 @@ return [
 ];
 ```
 
+The initial dictionary is stored in `resources/entities.php`. After publishing the package configuration, point `resources.entities` to your own PHP dictionary file when your application needs additional entity types or names.
+
 ## Development
 
 ```bash
@@ -108,7 +120,6 @@ composer format
 
 ## Roadmap
 
-- **0.6:** Entity detection
 - **1.0:** Stable production release
 
 ## License

@@ -13,7 +13,7 @@ final readonly class ExtractionResult implements JsonSerializable
      * @param list<string> $keywords
      * @param list<KeywordScore> $keywordScores
      * @param list<string> $phrases
-     * @param list<array<string, mixed>> $entities
+     * @param list<Entity> $entities
      * @param array<string, mixed> $meta
      */
     public function __construct(
@@ -50,7 +50,7 @@ final readonly class ExtractionResult implements JsonSerializable
         return $this->phrases;
     }
 
-    /** @return list<array<string, mixed>> */
+    /** @return list<Entity> */
     public function entities(): array
     {
         return $this->entities;
@@ -62,7 +62,7 @@ final readonly class ExtractionResult implements JsonSerializable
         return $this->meta;
     }
 
-    /** @return array{tokens: list<string>, keywords: list<string>, keyword_scores: list<array{keyword: string, score: float, frequency: int}>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
+    /** @return array{tokens: list<string>, keywords: list<string>, keyword_scores: list<array{keyword: string, score: float, frequency: int}>, phrases: list<string>, entities: list<array{name: string, type: string, source: string}>, meta: array<string, mixed>} */
     public function toArray(): array
     {
         return [
@@ -70,7 +70,7 @@ final readonly class ExtractionResult implements JsonSerializable
             'keywords' => $this->keywords(),
             'keyword_scores' => array_map(static fn (KeywordScore $score): array => $score->toArray(), $this->keywordScores()),
             'phrases' => $this->phrases(),
-            'entities' => $this->entities(),
+            'entities' => array_map(static fn (Entity $entity): array => $entity->toArray(), $this->entities()),
             'meta' => $this->meta(),
         ];
     }
@@ -80,7 +80,7 @@ final readonly class ExtractionResult implements JsonSerializable
         return json_encode($this->toArray(), $flags | JSON_THROW_ON_ERROR);
     }
 
-    /** @return array{tokens: list<string>, keywords: list<string>, keyword_scores: list<array{keyword: string, score: float, frequency: int}>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
+    /** @return array{tokens: list<string>, keywords: list<string>, keyword_scores: list<array{keyword: string, score: float, frequency: int}>, phrases: list<string>, entities: list<array{name: string, type: string, source: string}>, meta: array<string, mixed>} */
     public function jsonSerialize(): array
     {
         return $this->toArray();
