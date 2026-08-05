@@ -12,6 +12,7 @@ final class PersianTokenizer implements TextTokenizer
     private const NON_TOPICAL_PATTERNS = [
         '/^نیست(?:م|ی|یم|ید|ند)?$/u',
         '/^(?:ن?می‌?)?توان(?:م|ی|د|یم|ید|ند)$/u',
+        '/^(?:ن?می‌?)?گوی(?:م|ی|د|یم|ید|ند)$/u',
     ];
 
     /** @var array<string, true> */

@@ -55,4 +55,14 @@ final class PersianTokenizerTest extends TestCase
         self::assertTrue($tokenizer->isStopword('نمی‌توانند'));
         self::assertFalse($tokenizer->isStopword('انرژی'));
     }
+
+    public function test_it_filters_low_signal_news_terms_without_removing_subject_terms(): void
+    {
+        $tokenizer = new PersianTokenizer(require __DIR__.'/../../resources/stopwords.php');
+
+        self::assertSame(
+            ['نفت', 'انرژی', 'خزر', 'اسرائیل'],
+            $tokenizer->withoutStopwords(['نفت', 'یعنی', 'انرژی', 'روز', 'خزر', 'می‌گوید', 'اسرائیل']),
+        );
+    }
 }
