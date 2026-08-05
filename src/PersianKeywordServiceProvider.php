@@ -6,12 +6,14 @@ namespace PersianKeyword;
 
 use Illuminate\Support\ServiceProvider;
 use PersianKeyword\Contracts\KeywordExtractor;
+use PersianKeyword\Contracts\KeywordScorer;
 use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
 use PersianKeyword\Contracts\TextTokenizer;
 use PersianKeyword\Engines\PersianKeywordEngine;
 use PersianKeyword\Normalizers\PersianNormalizer;
 use PersianKeyword\PhraseExtractors\PersianPhraseExtractor;
+use PersianKeyword\Scoring\FrequencyKeywordScorer;
 use PersianKeyword\Tokenizers\PersianTokenizer;
 
 final class PersianKeywordServiceProvider extends ServiceProvider
@@ -42,6 +44,16 @@ final class PersianKeywordServiceProvider extends ServiceProvider
                 tokenizer: $app->make(TextTokenizer::class),
                 minTerms: $options['min_terms'] ?? 2,
                 maxTerms: $options['max_terms'] ?? 3,
+            );
+        });
+
+        $this->app->singleton(KeywordScorer::class, function (): FrequencyKeywordScorer {
+            /** @var array{title_weight?: float, body_weight?: float, phrase_boost?: float} $options */
+            $options = config('persian-keyword.scoring', []);
+
+            return new FrequencyKeywordScorer(
+                $options,
+                (int) config('persian-keyword.min_keyword_length', 2),
             );
         });
 

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace PersianKeyword\Engines;
 
 use PersianKeyword\Contracts\KeywordExtractor;
+use PersianKeyword\Contracts\KeywordScorer;
 use PersianKeyword\Contracts\PhraseExtractor;
 use PersianKeyword\Contracts\TextNormalizer;
 use PersianKeyword\Contracts\TextTokenizer;
 use PersianKeyword\DTO\ExtractionResult;
+use PersianKeyword\DTO\KeywordScore;
 
 final class PersianKeywordEngine implements KeywordExtractor
 {
@@ -16,6 +18,7 @@ final class PersianKeywordEngine implements KeywordExtractor
         private readonly TextNormalizer $normalizer,
         private readonly TextTokenizer $tokenizer,
         private readonly PhraseExtractor $phraseExtractor,
+        private readonly KeywordScorer $scorer,
     ) {
     }
 
@@ -36,22 +39,31 @@ final class PersianKeywordEngine implements KeywordExtractor
         $titleTokens = $this->tokenizer->tokenize($normalizedTitle);
         $bodyTokens = $this->tokenizer->tokenize($normalizedBody);
 
-        $phrases = [
-            ...$this->phraseExtractor->extract($titleTokens),
-            ...$this->phraseExtractor->extract($bodyTokens),
-        ];
+        $titlePhrases = $this->phraseExtractor->extract($titleTokens);
+        $bodyPhrases = $this->phraseExtractor->extract($bodyTokens);
+        $phrases = [...$titlePhrases, ...$bodyPhrases];
 
         if ($removeStopwords) {
             $titleTokens = $this->tokenizer->withoutStopwords($titleTokens);
             $bodyTokens = $this->tokenizer->withoutStopwords($bodyTokens);
         }
 
+        $keywordScores = $this->scorer->score(
+            $titleTokens,
+            $bodyTokens,
+            $titlePhrases,
+            $bodyPhrases,
+            (int) ($options['max_keywords'] ?? config('persian-keyword.max_keywords', 10)),
+        );
+
         return new ExtractionResult(
             tokens: [...$titleTokens, ...$bodyTokens],
+            keywords: array_map(static fn (KeywordScore $score): string => $score->keyword(), $keywordScores),
+            keywordScores: $keywordScores,
             phrases: array_values(array_unique($phrases)),
             meta: [
-                'version' => '0.4.0',
-                'status' => 'phrase-extraction-ready',
+                'version' => '0.5.0',
+                'status' => 'keyword-scoring-ready',
                 'normalized_title' => $normalizedTitle,
                 'normalized_body' => $normalizedBody,
                 'title_token_count' => count($titleTokens),

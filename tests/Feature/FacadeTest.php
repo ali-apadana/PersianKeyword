@@ -13,10 +13,11 @@ final class FacadeTest extends TestCase
     {
         $result = Keyword::extract('نمونه عنوان', 'این یک نمونه متن آزمایشی است');
 
-        self::assertSame([], $result->keywords());
+        self::assertSame(['نمونه', 'عنوان', 'متن', 'آزمایشی'], $result->keywords());
         self::assertSame(['نمونه', 'عنوان', 'نمونه', 'متن', 'آزمایشی'], $result->tokens());
         self::assertSame(['نمونه عنوان', 'نمونه متن', 'متن آزمایشی', 'نمونه متن آزمایشی'], $result->phrases());
         self::assertSame('phrase-extraction-ready', $result->meta()['status']);
         self::assertSame('نمونه عنوان', $result->meta()['normalized_title']);
+        self::assertSame('نمونه', $result->keywordScores()[0]->keyword());
     }
 }

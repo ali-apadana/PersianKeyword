@@ -34,6 +34,12 @@ return [
         'max_terms' => 3,
     ],
 
+    'scoring' => [
+        'title_weight' => 2.0,
+        'body_weight' => 1.0,
+        'phrase_boost' => 1.0,
+    ],
+
     'resources' => [
         'stopwords' => __DIR__.'/../resources/stopwords.php',
         'prefixes' => __DIR__.'/../resources/prefixes.php',

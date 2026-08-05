@@ -2,7 +2,7 @@
 
 `ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and named entities from Persian (Farsi) text.
 
-> **0.4.0 adds Persian phrase extraction.** Keyword scoring is planned for the next release.
+> **0.5.0 adds keyword scoring.** Results are now ranked using frequency, title presence, and phrase membership.
 
 ## Requirements
 
@@ -35,6 +35,15 @@ $entities = $result->entities();
 
 $array = $result->toArray();
 $json = $result->toJson();
+```
+
+`keywords()` returns the ranked keyword strings. Use `keywordScores()` when you also need each keyword's numeric score and frequency:
+
+```php
+foreach ($result->keywordScores() as $keyword) {
+    echo $keyword->keyword();
+    echo $keyword->score();
+}
 ```
 
 The 0.2 result also exposes the normalized source text in `$result->meta()`:
@@ -80,6 +89,11 @@ return [
         'min_terms' => 2,
         'max_terms' => 3,
     ],
+    'scoring' => [
+        'title_weight' => 2.0,
+        'body_weight' => 1.0,
+        'phrase_boost' => 1.0,
+    ],
 ];
 ```
 
@@ -94,7 +108,6 @@ composer format
 
 ## Roadmap
 
-- **0.5:** Keyword scoring engine
 - **0.6:** Entity detection
 - **1.0:** Stable production release
 

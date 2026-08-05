@@ -11,6 +11,7 @@ final readonly class ExtractionResult implements JsonSerializable
     /**
      * @param list<string> $tokens
      * @param list<string> $keywords
+     * @param list<KeywordScore> $keywordScores
      * @param list<string> $phrases
      * @param list<array<string, mixed>> $entities
      * @param array<string, mixed> $meta
@@ -18,6 +19,7 @@ final readonly class ExtractionResult implements JsonSerializable
     public function __construct(
         private array $tokens = [],
         private array $keywords = [],
+        private array $keywordScores = [],
         private array $phrases = [],
         private array $entities = [],
         private array $meta = [],
@@ -34,6 +36,12 @@ final readonly class ExtractionResult implements JsonSerializable
     public function keywords(): array
     {
         return $this->keywords;
+    }
+
+    /** @return list<KeywordScore> */
+    public function keywordScores(): array
+    {
+        return $this->keywordScores;
     }
 
     /** @return list<string> */
@@ -54,12 +62,13 @@ final readonly class ExtractionResult implements JsonSerializable
         return $this->meta;
     }
 
-    /** @return array{tokens: list<string>, keywords: list<string>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
+    /** @return array{tokens: list<string>, keywords: list<string>, keyword_scores: list<array{keyword: string, score: float, frequency: int}>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
     public function toArray(): array
     {
         return [
             'tokens' => $this->tokens(),
             'keywords' => $this->keywords(),
+            'keyword_scores' => array_map(static fn (KeywordScore $score): array => $score->toArray(), $this->keywordScores()),
             'phrases' => $this->phrases(),
             'entities' => $this->entities(),
             'meta' => $this->meta(),
@@ -71,7 +80,7 @@ final readonly class ExtractionResult implements JsonSerializable
         return json_encode($this->toArray(), $flags | JSON_THROW_ON_ERROR);
     }
 
-    /** @return array{tokens: list<string>, keywords: list<string>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
+    /** @return array{tokens: list<string>, keywords: list<string>, keyword_scores: list<array{keyword: string, score: float, frequency: int}>, phrases: list<string>, entities: list<array<string, mixed>>, meta: array<string, mixed>} */
     public function jsonSerialize(): array
     {
         return $this->toArray();
