@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Default extraction options
+    |--------------------------------------------------------------------------
+    |
+    | These options establish the package contract. Extraction engines will be
+    | introduced in later releases while keeping these configuration keys stable.
+    |
+    */
+    'max_keywords' => 10,
+
+    'min_keyword_length' => 2,
+
+    'normalize' => true,
+
+    'normalizer' => [
+        'convert_arabic_characters' => true,
+        'convert_digits' => true,
+        'remove_diacritics' => true,
+        'collapse_whitespace' => true,
+    ],
+
+    'resources' => [
+        'stopwords' => __DIR__.'/../resources/stopwords.php',
+        'prefixes' => __DIR__.'/../resources/prefixes.php',
+    ],
+];

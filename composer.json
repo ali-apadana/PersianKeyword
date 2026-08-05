@@ -1,0 +1,55 @@
+{
+    "name": "ali-apadana/persian-keyword",
+    "description": "A Laravel-first toolkit for extracting keywords, phrases, and entities from Persian text.",
+    "keywords": ["laravel", "php", "persian", "farsi", "keyword extraction", "nlp"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ali Apadana"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^12.0",
+        "illuminate/support": "^12.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "PersianKeyword\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PersianKeyword\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PersianKeyword\\PersianKeywordServiceProvider"
+            ],
+            "aliases": {
+                "Keyword": "PersianKeyword\\Facades\\Keyword"
+            }
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
