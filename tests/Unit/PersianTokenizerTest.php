@@ -56,6 +56,18 @@ final class PersianTokenizerTest extends TestCase
         self::assertFalse($tokenizer->isStopword('انرژی'));
     }
 
+    public function test_it_filters_common_past_and_perfect_verb_inflections_without_a_dictionary_entry(): void
+    {
+        $tokenizer = new PersianTokenizer();
+
+        self::assertTrue($tokenizer->isStopword('گرفته‌اند'));
+        self::assertTrue($tokenizer->isStopword('کرده‌ایم'));
+        self::assertTrue($tokenizer->isStopword('گرفتند'));
+        self::assertTrue($tokenizer->isStopword('رسید'));
+        self::assertFalse($tokenizer->isStopword('حادثه'));
+        self::assertFalse($tokenizer->isStopword('آبرسانی'));
+    }
+
     public function test_it_filters_low_signal_news_terms_without_removing_subject_terms(): void
     {
         $tokenizer = new PersianTokenizer(require __DIR__.'/../../resources/stopwords.php');

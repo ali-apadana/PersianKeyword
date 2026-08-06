@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.3.0] - 2026-08-06
+
+### Improved
+
+- Added native pattern-based filtering for common Persian past and perfect verb inflections such as `گرفته‌اند`, `کرده‌ایم`, `گرفتند`, and `رسید`.
+- Prevented low-signal sentence-ending verbs from appearing as keyword candidates.
+
 ## [2.2.0] - 2026-08-06
 
 ### Added

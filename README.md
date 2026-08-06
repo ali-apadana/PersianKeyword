@@ -10,6 +10,8 @@ Known letter-and-number model names remain one token. For example, `اف ۳۵` a
 
 The built-in stop-word dictionary includes broad Persian coverage: formal connectors, pronoun variants, number and temporal forms, news boilerplate, auxiliary verbs, and frequent non-topical verb forms. Pattern rules also cover inflections such as `می‌تواند`, `نمی‌توانند`, and `می‌گوید`. You can point `resources.stopwords` at your own PHP list after publishing the configuration if your content needs different rules.
 
+Common past and perfect verb forms such as `گرفته‌اند`, `کرده‌ایم`, and `رسیدند` are filtered with native patterns, so sentence-ending verbs do not become keywords.
+
 ## Requirements
 
 - PHP 8.2 or later

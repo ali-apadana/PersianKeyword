@@ -55,4 +55,16 @@ final class ExtractionTest extends TestCase
             $result->entities(),
         ));
     }
+
+    public function test_it_filters_perfect_verbs_from_keyword_candidates(): void
+    {
+        $result = Keyword::extract(
+            'حمله سایبری به سیستم‌های آبرسانی ۱۲ ایالت آمریکا',
+            'سیستم‌های آبرسانی در ۱۲ ایالت آمریکا مورد حمله سایبری قرار گرفته‌اند.',
+            ['max_keywords' => 5],
+        );
+
+        self::assertSame(['حمله سایبری', 'آمریکا', 'آبرسانی'], array_slice($result->keywords(), 0, 3));
+        self::assertNotContains('گرفته‌اند', $result->keywords());
+    }
 }
