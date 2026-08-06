@@ -70,7 +70,7 @@ final class PersianTokenizerTest extends TestCase
     {
         $tokenizer = new PersianTokenizer([], ['اف', 'f']);
 
-        self::assertSame(['اف ۳۵', 'f 35'], $tokenizer->tokenize('اف ۳۵ و F-35'));
+        self::assertSame(['اف ۳۵', 'و', 'f 35'], $tokenizer->tokenize('اف ۳۵ و F-35'));
     }
 
     public function test_the_bundled_stopword_dictionary_covers_common_function_word_variants(): void

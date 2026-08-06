@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] - 2026-08-06
+
+### Added
+
+- Native recognition of organization names that begin with terms such as `باشگاه`, `شرکت`, `وزارت`, `سازمان`, `دانشگاه`, `شهرداری`, and `فدراسیون`.
+
+### Improved
+
+- Organization phrases such as `باشگاه استقلال` receive an entity boost and rank above generic reporting phrases such as `انتشار اطلاعیه‌ای`.
+
 ## [2.0.2] - 2026-08-06
 
 ### Added

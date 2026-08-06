@@ -74,7 +74,7 @@ final class PersianKeywordEngine implements KeywordExtractor
             phrases: array_values(array_unique($phrases)),
             entities: $entities,
             meta: [
-                'version' => '2.0.2',
+                'version' => '2.1.0',
                 'status' => 'stable',
                 'normalized_title' => $normalizedTitle,
                 'normalized_body' => $normalizedBody,

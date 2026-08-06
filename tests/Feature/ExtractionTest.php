@@ -24,4 +24,19 @@ final class ExtractionTest extends TestCase
         self::assertContains(['name' => 'تهران', 'type' => 'location', 'source' => 'title'], $entities);
         self::assertContains(['name' => 'Laravel', 'type' => 'technology', 'source' => 'title'], $entities);
     }
+
+    public function test_it_prioritizes_a_detected_organization_over_a_generic_reporting_phrase(): void
+    {
+        $result = Keyword::extract(
+            'پایان همکاری استقلال با رامین رضاییان',
+            'باشگاه استقلال با انتشار اطلاعیه‌ای از پایان همکاری با رامین رضاییان خبر داد.',
+        );
+
+        self::assertContains('باشگاه استقلال', $result->keywords());
+        self::assertNotContains('انتشار اطلاعیه‌ای', array_slice($result->keywords(), 0, 5));
+        self::assertContains(['name' => 'باشگاه استقلال', 'type' => 'organization', 'source' => 'body'], array_map(
+            static fn ($entity): array => $entity->toArray(),
+            $result->entities(),
+        ));
+    }
 }
