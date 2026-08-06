@@ -39,7 +39,9 @@ return [
     'scoring' => [
         'title_weight' => 2.0,
         'body_weight' => 1.0,
-        'phrase_boost' => 1.0,
+        'title_phrase_weight' => 5.0,
+        'body_phrase_weight' => 2.0,
+        'entity_boost' => 3.0,
     ],
 
     'entity_recognition' => [

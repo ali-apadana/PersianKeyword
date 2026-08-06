@@ -2,7 +2,7 @@
 
 `ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and dictionary-based named entities from Persian (Farsi) text.
 
-**Version 1.0 is stable.** It provides a predictable, Laravel-native API for Persian text processing without requiring an external service.
+**Version 2.0 provides native phrase-aware ranking.** It remains fully PHP/Laravel based and requires no external service.
 
 HTML content is supported: tags are removed and entities such as `&zwnj;` and `&nbsp;` are decoded before extraction.
 
@@ -42,6 +42,8 @@ $entities = $result->entities();
 $array = $result->toArray();
 $json = $result->toJson();
 ```
+
+The extractor ranks meaningful phrases alongside single terms. For example, a title containing `حمله سایبری به سیستم‌های آبرسانی ۱۲ ایالت آمریکا` prioritizes `حمله سایبری`, `آمریکا`, and `آبرسانی` instead of standalone numbers or generic heads such as `سیستم`.
 
 Pass options for a single extraction when needed:
 
@@ -120,7 +122,9 @@ return [
     'scoring' => [
         'title_weight' => 2.0,
         'body_weight' => 1.0,
-        'phrase_boost' => 1.0,
+        'title_phrase_weight' => 5.0,
+        'body_phrase_weight' => 2.0,
+        'entity_boost' => 3.0,
     ],
     'entity_recognition' => [
         'enabled' => true,

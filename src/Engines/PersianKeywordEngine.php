@@ -50,14 +50,6 @@ final class PersianKeywordEngine implements KeywordExtractor
             $bodyTokens = $this->tokenizer->withoutStopwords($bodyTokens);
         }
 
-        $keywordScores = $this->scorer->score(
-            $titleTokens,
-            $bodyTokens,
-            $titlePhrases,
-            $bodyPhrases,
-            (int) ($options['max_keywords'] ?? config('persian-keyword.max_keywords', 10)),
-        );
-
         $detectEntities = $options['detect_entities'] ?? config('persian-keyword.entity_recognition.enabled', true);
         $entities = $detectEntities
             ? [
@@ -66,6 +58,15 @@ final class PersianKeywordEngine implements KeywordExtractor
             ]
             : [];
 
+        $keywordScores = $this->scorer->score(
+            $titleTokens,
+            $bodyTokens,
+            $titlePhrases,
+            $bodyPhrases,
+            array_values(array_unique(array_map(static fn ($entity): string => $entity->name(), $entities))),
+            (int) ($options['max_keywords'] ?? config('persian-keyword.max_keywords', 10)),
+        );
+
         return new ExtractionResult(
             tokens: [...$titleTokens, ...$bodyTokens],
             keywords: array_map(static fn (KeywordScore $score): string => $score->keyword(), $keywordScores),
@@ -73,7 +74,7 @@ final class PersianKeywordEngine implements KeywordExtractor
             phrases: array_values(array_unique($phrases)),
             entities: $entities,
             meta: [
-                'version' => '1.1.0',
+                'version' => '2.0.0',
                 'status' => 'stable',
                 'normalized_title' => $normalizedTitle,
                 'normalized_body' => $normalizedBody,

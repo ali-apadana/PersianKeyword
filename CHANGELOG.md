@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-08-06
+
+### Added
+
+- Native PHP phrase-aware keyword ranking, without external services or Python dependencies.
+- Strong scoring for phrases found in the title and body, plus dictionary-entity boosts.
+- Country dictionary entries for the United States, Ukraine, and Azerbaijan.
+
+### Improved
+
+- Standalone numbers and generic phrase heads such as `سیستم` and `ایالت` no longer dominate keywords.
+- Keyword output avoids returning individual words already covered by a stronger selected phrase.
+
 ## [1.5.0] - 2026-08-06
 
 ### Improved
