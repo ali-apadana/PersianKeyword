@@ -39,4 +39,20 @@ final class ExtractionTest extends TestCase
             $result->entities(),
         ));
     }
+
+    public function test_it_promotes_a_detected_sport_event_over_low_signal_terms(): void
+    {
+        $result = Keyword::extract(
+            'قطع همکاری با قلعه نویی همچنان سوژه است/ نظر برخی مسئولان تغییر کرد',
+            'فضای حاکم بر هیئت‌رئیسه فدراسیون فوتبال درباره ادامه همکاری با امیر قلعه‌نویی دستخوش تغییر شده و برخی از اعضا که پیش‌تر منتقد او بودند اکنون موافق ادامه حضور او تا جام ملت‌های آسیا هستند.',
+            ['max_keywords' => 5],
+        );
+
+        self::assertContains('جام ملت‌های آسیا', $result->keywords());
+        self::assertNotContains('ادامه', $result->keywords());
+        self::assertContains(['name' => 'جام ملت‌های آسیا', 'type' => 'event', 'source' => 'body'], array_map(
+            static fn ($entity): array => $entity->toArray(),
+            $result->entities(),
+        ));
+    }
 }

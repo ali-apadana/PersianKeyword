@@ -35,4 +35,15 @@ final class DictionaryEntityRecognizerTest extends TestCase
         self::assertSame('organization', $entities[0]->type());
         self::assertSame('body', $entities[0]->source());
     }
+
+    public function test_it_recognizes_common_sport_event_names(): void
+    {
+        $recognizer = new DictionaryEntityRecognizer();
+
+        $entities = $recognizer->recognize('حضور تیم تا جام ملت‌های آسیا ادامه دارد.', 'body');
+
+        self::assertCount(1, $entities);
+        self::assertSame('جام ملت‌های آسیا', $entities[0]->name());
+        self::assertSame('event', $entities[0]->type());
+    }
 }

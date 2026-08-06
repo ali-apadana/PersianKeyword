@@ -55,7 +55,7 @@ final class PersianKeywordServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(KeywordScorer::class, function (): FrequencyKeywordScorer {
-            /** @var array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float} $options */
+            /** @var array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float} $options */
             $options = config('persian-keyword.scoring', []);
 
             return new FrequencyKeywordScorer(

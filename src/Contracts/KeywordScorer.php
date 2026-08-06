@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PersianKeyword\Contracts;
 
 use PersianKeyword\DTO\KeywordScore;
+use PersianKeyword\DTO\Entity;
 
 interface KeywordScorer
 {
@@ -13,7 +14,7 @@ interface KeywordScorer
      * @param list<string> $bodyTokens
      * @param list<string> $titlePhrases
      * @param list<string> $bodyPhrases
-     * @param list<string> $entityNames
+     * @param list<Entity> $entities
      * @return list<KeywordScore>
      */
     public function score(
@@ -21,7 +22,7 @@ interface KeywordScorer
         array $bodyTokens,
         array $titlePhrases,
         array $bodyPhrases,
-        array $entityNames,
+        array $entities,
         int $limit,
     ): array;
 }

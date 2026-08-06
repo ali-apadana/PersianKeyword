@@ -19,6 +19,14 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         'از', 'با', 'به', 'در', 'برای', 'که', 'و', 'یا', 'این', 'آن', 'یک',
     ];
 
+    /** @var list<string> */
+    private const SPORT_EVENT_PATTERNS = [
+        '/(?<![\p{L}\p{N}])جام\s+ملت(?:\x{200C})?های\s+[\p{L}\p{N}\x{200C}-]+(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])جام\s+(?:جهانی|حذفی)(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])لیگ\s+(?:برتر|قهرمانان)(?:\s+اروپا)?(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])بازی(?:\x{200C})?های\s+المپیک(?![\p{L}\p{N}])/u',
+    ];
+
     /** @param array<string, list<string>> $dictionary */
     public function __construct(private readonly array $dictionary = [])
     {
@@ -31,6 +39,10 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         $haystack = $this->lowercase($text);
 
         foreach ($this->recognizeOrganizationNames($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizeSportEvents($text, $source) as $entity) {
             $entities[] = $entity;
         }
 
@@ -66,6 +78,24 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
             }
 
             $entities[] = new Entity(trim($match[1].' '.$match[2]), 'organization', $source);
+        }
+
+        return $entities;
+    }
+
+    /** @return list<Entity> */
+    private function recognizeSportEvents(string $text, string $source): array
+    {
+        $entities = [];
+
+        foreach (self::SPORT_EVENT_PATTERNS as $pattern) {
+            if (preg_match_all($pattern, $text, $matches) < 1) {
+                continue;
+            }
+
+            foreach ($matches[0] as $name) {
+                $entities[] = new Entity($name, 'event', $source);
+            }
         }
 
         return $entities;

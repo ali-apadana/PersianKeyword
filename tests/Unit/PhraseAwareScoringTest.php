@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PersianKeyword\Tests\Unit;
 
 use PersianKeyword\Scoring\FrequencyKeywordScorer;
+use PersianKeyword\DTO\Entity;
 use PHPUnit\Framework\TestCase;
 
 final class PhraseAwareScoringTest extends TestCase
@@ -18,7 +19,7 @@ final class PhraseAwareScoringTest extends TestCase
             ['سیستم‌های', 'آبرسانی', '۱۲', 'ایالت', 'آمریکا', 'حمله', 'سایبری'],
             ['حمله سایبری', 'سیستم‌های آبرسانی', 'ایالت آمریکا'],
             ['سیستم‌های آبرسانی', 'ایالت آمریکا', 'حمله سایبری'],
-            ['آمریکا'],
+            [new Entity('آمریکا', 'location', 'title')],
             10,
         );
 

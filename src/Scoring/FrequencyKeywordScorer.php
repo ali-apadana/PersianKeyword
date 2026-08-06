@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PersianKeyword\Scoring;
 
 use PersianKeyword\Contracts\KeywordScorer;
+use PersianKeyword\DTO\Entity;
 use PersianKeyword\DTO\KeywordScore;
 
 final class FrequencyKeywordScorer implements KeywordScorer
@@ -15,7 +16,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
         'موارد', 'وضعیت', 'فرآیند', 'اقدام', 'ایالت', 'شهرستان',
     ];
 
-    /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float} $options */
+    /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float} $options */
     public function __construct(private readonly array $options = [], private readonly int $minKeywordLength = 2)
     {
     }
@@ -25,7 +26,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
      * @param list<string> $bodyTokens
      * @param list<string> $titlePhrases
      * @param list<string> $bodyPhrases
-     * @param list<string> $entityNames
+     * @param list<Entity> $entities
      * @return list<KeywordScore>
      */
     public function score(
@@ -33,7 +34,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
         array $bodyTokens,
         array $titlePhrases,
         array $bodyPhrases,
-        array $entityNames,
+        array $entities,
         int $limit,
     ): array
     {
@@ -44,7 +45,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
 
         $this->addPhrases($scores, $titlePhrases, (float) ($this->options['title_phrase_weight'] ?? 5.0));
         $this->addPhrases($scores, $bodyPhrases, (float) ($this->options['body_phrase_weight'] ?? 2.0));
-        $this->addEntities($scores, $entityNames, (float) ($this->options['entity_boost'] ?? 3.0));
+        $this->addEntities($scores, $entities, (float) ($this->options['entity_boost'] ?? 3.0));
 
         $ranked = [];
         foreach ($scores as $keyword => $data) {
@@ -86,13 +87,17 @@ final class FrequencyKeywordScorer implements KeywordScorer
         }
     }
 
-    /** @param array<string, array{score: float, frequency: int}> $scores @param list<string> $entityNames */
-    private function addEntities(array &$scores, array $entityNames, float $boost): void
+    /** @param array<string, array{score: float, frequency: int}> $scores @param list<Entity> $entities */
+    private function addEntities(array &$scores, array $entities, float $boost): void
     {
-        foreach ($entityNames as $entity) {
-            if (! $this->isEligibleToken($entity)) continue;
-            $scores[$entity] ??= ['score' => 0.0, 'frequency' => 0];
-            $scores[$entity]['score'] += $boost;
+        foreach ($entities as $entity) {
+            $name = $entity->name();
+            if (! $this->isEligibleToken($name)) continue;
+
+            $scores[$name] ??= ['score' => 0.0, 'frequency' => 0];
+            $scores[$name]['score'] += $entity->type() === 'event'
+                ? (float) ($this->options['event_boost'] ?? 4.0)
+                : $boost;
         }
     }
 

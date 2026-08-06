@@ -63,7 +63,7 @@ final class PersianKeywordEngine implements KeywordExtractor
             $bodyTokens,
             $titlePhrases,
             $bodyPhrases,
-            array_values(array_unique(array_map(static fn ($entity): string => $entity->name(), $entities))),
+            $this->uniqueEntities($entities),
             (int) ($options['max_keywords'] ?? config('persian-keyword.max_keywords', 10)),
         );
 
@@ -74,7 +74,7 @@ final class PersianKeywordEngine implements KeywordExtractor
             phrases: array_values(array_unique($phrases)),
             entities: $entities,
             meta: [
-                'version' => '2.1.0',
+                'version' => '2.2.0',
                 'status' => 'stable',
                 'normalized_title' => $normalizedTitle,
                 'normalized_body' => $normalizedBody,
@@ -83,5 +83,16 @@ final class PersianKeywordEngine implements KeywordExtractor
                 'entity_recognition_enabled' => $detectEntities,
             ],
         );
+    }
+
+    /** @param list<\PersianKeyword\DTO\Entity> $entities @return list<\PersianKeyword\DTO\Entity> */
+    private function uniqueEntities(array $entities): array
+    {
+        $unique = [];
+        foreach ($entities as $entity) {
+            $unique[$entity->type().'|'.$entity->name()] ??= $entity;
+        }
+
+        return array_values($unique);
     }
 }

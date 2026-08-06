@@ -42,6 +42,7 @@ return [
         'title_phrase_weight' => 5.0,
         'body_phrase_weight' => 2.0,
         'entity_boost' => 3.0,
+        'event_boost' => 4.0,
     ],
 
     'entity_recognition' => [
