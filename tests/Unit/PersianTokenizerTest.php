@@ -72,4 +72,14 @@ final class PersianTokenizerTest extends TestCase
 
         self::assertSame(['اف ۳۵', 'f 35'], $tokenizer->tokenize('اف ۳۵ و F-35'));
     }
+
+    public function test_the_bundled_stopword_dictionary_covers_common_function_word_variants(): void
+    {
+        $tokenizer = new PersianTokenizer(require __DIR__.'/../../resources/stopwords.php');
+
+        self::assertSame(
+            ['انرژی', 'سیاست'],
+            $tokenizer->withoutStopwords(['هرچند', 'بااین‌حال', 'انرژی', 'می‌بایست', 'سیاست']),
+        );
+    }
 }

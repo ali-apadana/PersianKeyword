@@ -8,7 +8,7 @@ HTML content is supported: tags are removed and entities such as `&zwnj;` and `&
 
 Known letter-and-number model names remain one token. For example, `اف ۳۵` and `F-35` are extracted as complete model identifiers rather than separate words.
 
-The built-in stop-word dictionary filters common news boilerplate, conjunctions, pronouns, temporal and quantity terms, auxiliary verbs, and frequent non-topical verb forms. Pattern rules also cover inflections such as `می‌تواند`, `نمی‌توانند`, and `می‌گوید`. You can point `resources.stopwords` at your own PHP list after publishing the configuration if your content needs different rules.
+The built-in stop-word dictionary includes broad Persian coverage: formal connectors, pronoun variants, number and temporal forms, news boilerplate, auxiliary verbs, and frequent non-topical verb forms. Pattern rules also cover inflections such as `می‌تواند`, `نمی‌توانند`, and `می‌گوید`. You can point `resources.stopwords` at your own PHP list after publishing the configuration if your content needs different rules.
 
 ## Requirements
 
