@@ -54,6 +54,12 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
     ];
 
     /** @var list<string> */
+    private const NEWS_AND_MEDICAL_PATTERNS = [
+        '/(?<![\p{L}\p{N}])تیراندازی\s+در\s+(?:یک\s+)?مدرسه(?:\x{200C}ای)?(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])سرطان\s+[\p{L}\p{N}\x{200C}-]+(?![\p{L}\p{N}])/u',
+    ];
+
+    /** @var list<string> */
     private const NON_NAME_WORDS_BEFORE_A_ROLE = [
         'درگذشت', 'تسلیت', 'پیام', 'پیامی', 'مرحوم', 'شادروان', 'زنده‌یاد',
     ];
@@ -94,6 +100,10 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         foreach ($this->recognizePatternEntities($text, $source, self::SPORT_ACTION_PATTERNS, 'event') as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizePatternEntities($text, $source, self::NEWS_AND_MEDICAL_PATTERNS, 'event') as $entity) {
             $entities[] = $entity;
         }
 

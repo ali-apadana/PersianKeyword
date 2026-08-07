@@ -133,4 +133,28 @@ final class ExtractionTest extends TestCase
         self::assertContains('اخراج', $result->keywords());
         self::assertNotContains('تلخ مدافع', $result->keywords());
     }
+
+    public function test_it_recognizes_school_shooting_and_medical_terms(): void
+    {
+        $shooting = Keyword::extract(
+            '۷ کشته بر اثر تیراندازی در یک مدرسه در تایلند',
+            'بر اثر تیراندازی در مدرسه‌ای در شمال شهر بانکوک، پایتخت تایلند ۷ نفر کشته و ۳۰ تن زخمی شدند.',
+            ['max_keywords' => 10],
+        );
+        self::assertContains('تیراندازی در مدرسه‌ای', $shooting->keywords());
+        self::assertContains('تایلند', $shooting->keywords());
+        self::assertContains('بانکوک', $shooting->keywords());
+        self::assertNotContains('اثر تیراندازی', $shooting->keywords());
+        self::assertNotContains('بانکوک پایتخت', $shooting->keywords());
+
+        $health = Keyword::extract(
+            'چای داغ بنوشید سرطان می‌گیرید',
+            'رئیس مرکز تحقیقات سرطان‌های گوارشی دانشگاه علوم پزشکی تهران، از شناسایی یکی از مهم‌ترین عوامل رفتاری قابل پیشگیری در ابتلا به سرطان مری خبر داد.',
+            ['max_keywords' => 10],
+        );
+        self::assertContains('چای داغ', $health->keywords());
+        self::assertContains('سرطان مری', $health->keywords());
+        self::assertContains('دانشگاه علوم پزشکی تهران', $health->keywords());
+        self::assertNotContains('بنوشید سرطان', $health->keywords());
+    }
 }

@@ -59,6 +59,8 @@ Common sport events such as `جام ملت‌های آسیا`, `جام جهان�
 
 Sports support also recognizes `تیم ملی فوتبال ایران`, club-country names such as `ویتبسک بلاروس`, and disciplinary events such as `اخراج`.
 
+For general news and health content, native rules recognize events such as `تیراندازی در مدرسه` and terms such as `سرطان مری`; long institutions such as `دانشگاه علوم پزشکی تهران` are also detected.
+
 Pass options for a single extraction when needed:
 
 ```php

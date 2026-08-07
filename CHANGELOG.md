@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.8.0] - 2026-08-07
+
+### Added
+
+- Native recognition of `تیراندازی در مدرسه` and medical terms such as `سرطان مری`.
+- Built-in entries for `تایلند`, `بانکوک`, and `دانشگاه علوم پزشکی تهران`.
+
+### Improved
+
+- Filtered imperative and present verb forms such as `بنوشید` and `می‌گیرید`, plus low-signal phrases containing `اثر` and `پایتخت`.
+
 ## [2.7.0] - 2026-08-07
 
 ### Added
