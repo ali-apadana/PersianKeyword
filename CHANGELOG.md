@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.2.0] - 2026-08-07
+
+### Added
+
+- Native `PersianNounPhraseAnalyzer` that rejects phrase candidates containing bridge words or verb-like terms before ranking.
+- Built-in entities for `سپاه پاسداران`, `نیروی هوافضای سپاه`, and `سامانه پدافندی`.
+
+### Improved
+
+- Filtered candidate phrases such as `آمریکا توسط` before they can reach keyword scoring.
+
 ## [3.1.0] - 2026-08-07
 
 ### Added

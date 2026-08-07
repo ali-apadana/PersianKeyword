@@ -179,4 +179,19 @@ final class ExtractionTest extends TestCase
         self::assertContains('بازیکن خارجی استقلال', $sport->keywords());
         self::assertNotContains('استقلال راهی', $sport->keywords());
     }
+
+    public function test_it_rejects_bridge_and_verb_phrases_before_scoring(): void
+    {
+        $result = Keyword::extract(
+            'تصاویر جدید از پهپادهای منهدم‌شده آمریکا توسط سپاه',
+            'تصاویر جدیدی از بقایای پهپادهای آمریکایی-صهیونی که توسط سامانه پدافندی نوین نیروی هوافضای سپاه پاسداران رهگیری و منهدم شده‌اند، منتشر شد.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('سپاه پاسداران', $result->keywords());
+        self::assertContains('نیروی هوافضای سپاه', $result->keywords());
+        self::assertContains('سامانه پدافندی', $result->keywords());
+        self::assertNotContains('آمریکا توسط', $result->keywords());
+        self::assertNotContains('آمریکا توسط سپاه', $result->keywords());
+    }
 }

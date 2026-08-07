@@ -7,9 +7,11 @@ namespace PersianKeyword\Scoring;
 use PersianKeyword\Contracts\KeywordScorer;
 use PersianKeyword\DTO\Entity;
 use PersianKeyword\DTO\KeywordScore;
+use PersianKeyword\Support\PersianNounPhraseAnalyzer;
 
 final class FrequencyKeywordScorer implements KeywordScorer
 {
+    private readonly PersianNounPhraseAnalyzer $nounPhraseAnalyzer;
     /** @var list<string> */
     private const GENERIC_HEADS = [
         'سیستم', 'سامانه', 'بخش', 'روند', 'برنامه', 'طرح', 'موضوع', 'مورد',
@@ -19,6 +21,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
     /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float, person_boost?: float, facility_boost?: float, long_organization_boost?: float} $options */
     public function __construct(private readonly array $options = [], private readonly int $minKeywordLength = 2)
     {
+        $this->nounPhraseAnalyzer = new PersianNounPhraseAnalyzer();
     }
 
     /**
@@ -125,6 +128,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
     private function isEligiblePhrase(array $terms): bool
     {
         if (count($terms) < 2 || $this->isGenericHead($terms[0])) return false;
+        if (! $this->nounPhraseAnalyzer->isMeaningful($terms)) return false;
 
         foreach ($terms as $term) {
             if (! $this->isEligibleToken($term)) return false;
