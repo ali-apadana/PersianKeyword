@@ -76,6 +76,7 @@ final class PersianNormalizer implements TextNormalizer
 
         // Preserve the Persian half-space while removing spaces around it.
         $normalized = preg_replace('/\s*\x{200C}\s*/u', "\u{200C}", $normalized) ?? $normalized;
+        $normalized = preg_replace('/تله\s+فیلم/u', "تله\u{200C}فیلم", $normalized) ?? $normalized;
 
         if ($this->options['collapse_whitespace']) {
             $normalized = preg_replace('/\s+/u', ' ', $normalized) ?? $normalized;

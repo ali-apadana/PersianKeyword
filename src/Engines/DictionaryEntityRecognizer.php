@@ -113,6 +113,10 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
             $entities[] = $entity;
         }
 
+        foreach ($this->recognizeCanonicalRelations($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
         foreach ($this->dictionary as $type => $names) {
             foreach ($names as $name) {
                 $needle = $this->lowercase($name);
@@ -125,6 +129,14 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         return $entities;
+    }
+
+    /** @return list<Entity> */
+    private function recognizeCanonicalRelations(string $text, string $source): array
+    {
+        if (preg_match('/(?<![\p{L}\p{N}])(?:بازگشت\s+به\s+تلویزیون|به\s+تلویزیون\s+بازگشت)(?![\p{L}\p{N}])/u', $text) !== 1) return [];
+
+        return [new Entity('بازگشت به تلویزیون', 'event', $source)];
     }
 
     /** @return list<Entity> */

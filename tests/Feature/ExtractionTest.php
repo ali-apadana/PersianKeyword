@@ -224,4 +224,20 @@ final class ExtractionTest extends TestCase
         self::assertNotContains('خارجی مجلس', $result->keywords());
         self::assertNotContains('زودی متن', $result->keywords());
     }
+
+    public function test_it_recognizes_relational_and_coordinated_media_phrases(): void
+    {
+        $result = Keyword::extract(
+            'مازیار لرستانی به تلویزیون بازگشت؛ نگارش و ساخت یک تله‌فیلم',
+            'مازیار لرستانی نگارش و ساخت یک تله فیلم را برای تلویزیون بر عهده گرفت.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('مازیار لرستانی', $result->keywords());
+        self::assertContains('بازگشت به تلویزیون', $result->keywords());
+        self::assertContains('نگارش و ساخت', $result->keywords());
+        self::assertContains('تله‌فیلم', $result->keywords());
+        self::assertNotContains('تلویزیون بازگشت', $result->keywords());
+        self::assertNotContains('ساخت', $result->keywords());
+    }
 }
