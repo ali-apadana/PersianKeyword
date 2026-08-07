@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.6.0] - 2026-08-07
+
+### Added
+
+- Native person detection before academic and cultural roles such as `اندیشمند`, `استاد`, `پژوهشگر`, `نویسنده`, and `شاعر`.
+- Built-in organization entry for `سازمان تبلیغات اسلامی`.
+
+### Improved
+
+- Filtered the connector `درپی` and avoided shortened organization phrases when a complete organization entity is available.
+- Improved recognition of quoted names in obituary and condolence text.
+
 ## [2.5.0] - 2026-08-07
 
 ### Added

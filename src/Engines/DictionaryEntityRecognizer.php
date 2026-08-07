@@ -35,11 +35,16 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         '/(?<![\p{L}\p{N}])نیروی\s+انتظامی(?![\p{L}\p{N}])/u',
     ];
 
-    private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s+(?:رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار)(?![\p{L}\p{N}]))/u';
+    private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s*(?:[»”"]\s*)?(?:رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار|اندیشمند|استاد|پژوهشگر|نویسنده|شاعر)(?![\p{L}\p{N}]))/u';
 
     /** @var list<string> */
     private const FACILITY_PATTERNS = [
         '/(?<![\p{L}\p{N}])پالایشگاه\s+(?:اول|دوم|سوم|چهارم|پنجم|[\p{N}]+)\s+پارس\s+جنوبی(?![\p{L}\p{N}])/u',
+    ];
+
+    /** @var list<string> */
+    private const NON_NAME_WORDS_BEFORE_A_ROLE = [
+        'درگذشت', 'تسلیت', 'پیام', 'پیامی', 'مرحوم', 'شادروان', 'زنده‌یاد',
     ];
 
     /** @param array<string, list<string>> $dictionary */
@@ -159,10 +164,23 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
             return [];
         }
 
-        return array_map(
-            static fn (string $name): Entity => new Entity($name, 'person', $source),
-            $matches[1],
-        );
+        $entities = [];
+        foreach ($matches[1] as $match) {
+            $name = $this->removeLeadingNonNameWord($match);
+            $entities[] = new Entity($name, 'person', $source);
+        }
+
+        return $entities;
+    }
+
+    private function removeLeadingNonNameWord(string $candidate): string
+    {
+        $terms = explode(' ', $candidate);
+        if (count($terms) === 3 && in_array($this->lowercase($terms[0]), self::NON_NAME_WORDS_BEFORE_A_ROLE, true)) {
+            array_shift($terms);
+        }
+
+        return implode(' ', $terms);
     }
 
     /** @return list<Entity> */

@@ -102,4 +102,20 @@ final class ExtractionTest extends TestCase
         self::assertNotContains('جنوبی کلید', $result->keywords());
         self::assertNotContains('جنوبی کلید خورد', $result->keywords());
     }
+
+    public function test_it_recognizes_people_before_academic_roles_and_complete_organizations(): void
+    {
+        $result = Keyword::extract(
+            'پیام تسلیت رئیس سازمان تبلیغات اسلامی درپی درگذشت اندیشمند مازندرانی',
+            'رئیس سازمان تبلیغات اسلامی در پیامی درگذشت «علی قائمی» اندیشمند کوشای مازندرانی در حوزه علم و تربیت را تسلیت گفت.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('سازمان تبلیغات اسلامی', $result->keywords());
+        self::assertContains('علی قائمی', $result->keywords());
+        self::assertContains('پیام تسلیت', $result->keywords());
+        self::assertNotContains('سازمان تبلیغات', $result->keywords());
+        self::assertNotContains('تبلیغات اسلامی', $result->keywords());
+        self::assertNotContains('اسلامی درپی', $result->keywords());
+    }
 }

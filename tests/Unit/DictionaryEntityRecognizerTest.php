@@ -68,4 +68,15 @@ final class DictionaryEntityRecognizerTest extends TestCase
         self::assertSame('پالایشگاه سوم پارس جنوبی', $entities[0]->name());
         self::assertSame('facility', $entities[0]->type());
     }
+
+    public function test_it_recognizes_a_person_before_a_cultural_or_academic_role(): void
+    {
+        $recognizer = new DictionaryEntityRecognizer();
+
+        $entities = $recognizer->recognize('درگذشت علی قائمی اندیشمند مازندرانی اعلام شد.', 'body');
+
+        self::assertCount(1, $entities);
+        self::assertSame('علی قائمی', $entities[0]->name());
+        self::assertSame('person', $entities[0]->type());
+    }
 }
