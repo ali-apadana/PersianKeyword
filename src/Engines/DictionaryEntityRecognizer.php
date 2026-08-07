@@ -27,6 +27,16 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         '/(?<![\p{L}\p{N}])بازی(?:\x{200C})?های\s+المپیک(?![\p{L}\p{N}])/u',
     ];
 
+    /** @var list<string> */
+    private const GOVERNMENT_ORGANIZATION_PATTERNS = [
+        '/(?<![\p{L}\p{N}])مجلس\s+شورای\s+اسلامی(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])شورای\s+عالی\s+امنیت\s+ملی(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])قوه\s+قضاییه(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])نیروی\s+انتظامی(?![\p{L}\p{N}])/u',
+    ];
+
+    private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s+(?:رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار)(?![\p{L}\p{N}]))/u';
+
     /** @param array<string, list<string>> $dictionary */
     public function __construct(private readonly array $dictionary = [])
     {
@@ -43,6 +53,14 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         foreach ($this->recognizeSportEvents($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizeGovernmentOrganizations($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizePeopleBeforeOfficialTitles($text, $source) as $entity) {
             $entities[] = $entity;
         }
 
@@ -95,6 +113,42 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
 
             foreach ($matches[0] as $name) {
                 $entities[] = new Entity($name, 'event', $source);
+            }
+        }
+
+        return $entities;
+    }
+
+    /** @return list<Entity> */
+    private function recognizeGovernmentOrganizations(string $text, string $source): array
+    {
+        return $this->recognizePatternEntities($text, $source, self::GOVERNMENT_ORGANIZATION_PATTERNS, 'organization');
+    }
+
+    /** @return list<Entity> */
+    private function recognizePeopleBeforeOfficialTitles(string $text, string $source): array
+    {
+        if (preg_match_all(self::PERSON_BEFORE_OFFICIAL_TITLE_PATTERN, $text, $matches) < 1) {
+            return [];
+        }
+
+        return array_map(
+            static fn (string $name): Entity => new Entity($name, 'person', $source),
+            $matches[1],
+        );
+    }
+
+    /** @param list<string> $patterns @return list<Entity> */
+    private function recognizePatternEntities(string $text, string $source, array $patterns, string $type): array
+    {
+        $entities = [];
+        foreach ($patterns as $pattern) {
+            if (preg_match_all($pattern, $text, $matches) < 1) {
+                continue;
+            }
+
+            foreach ($matches[0] as $name) {
+                $entities[] = new Entity($name, $type, $source);
             }
         }
 

@@ -16,7 +16,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
         'موارد', 'وضعیت', 'فرآیند', 'اقدام', 'ایالت', 'شهرستان',
     ];
 
-    /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float} $options */
+    /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float, person_boost?: float} $options */
     public function __construct(private readonly array $options = [], private readonly int $minKeywordLength = 2)
     {
     }
@@ -59,7 +59,11 @@ final class FrequencyKeywordScorer implements KeywordScorer
             return $byFrequency !== 0 ? $byFrequency : strcmp($left->keyword(), $right->keyword());
         });
 
-        return $this->selectNonOverlapping($ranked, $limit);
+        return $this->selectNonOverlapping(
+            $ranked,
+            $limit,
+            array_map(static fn (Entity $entity): string => $entity->name(), $entities),
+        );
     }
 
     /** @param array<string, array{score: float, frequency: int}> $scores @param list<string> $tokens */
@@ -95,9 +99,11 @@ final class FrequencyKeywordScorer implements KeywordScorer
             if (! $this->isEligibleToken($name)) continue;
 
             $scores[$name] ??= ['score' => 0.0, 'frequency' => 0];
-            $scores[$name]['score'] += $entity->type() === 'event'
-                ? (float) ($this->options['event_boost'] ?? 4.0)
-                : $boost;
+            $scores[$name]['score'] += match ($entity->type()) {
+                'event' => (float) ($this->options['event_boost'] ?? 4.0),
+                'person' => (float) ($this->options['person_boost'] ?? 4.0),
+                default => $boost,
+            };
         }
     }
 
@@ -127,8 +133,8 @@ final class FrequencyKeywordScorer implements KeywordScorer
         return in_array($stem, self::GENERIC_HEADS, true);
     }
 
-    /** @param list<KeywordScore> $ranked @return list<KeywordScore> */
-    private function selectNonOverlapping(array $ranked, int $limit): array
+    /** @param list<KeywordScore> $ranked @param list<string> $entityNames @return list<KeywordScore> */
+    private function selectNonOverlapping(array $ranked, int $limit, array $entityNames): array
     {
         $selected = [];
         $coveredTerms = [];
@@ -137,6 +143,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
             $terms = explode(' ', $candidate->keyword());
 
             if (count($terms) === 1 && isset($coveredTerms[$terms[0]])) continue;
+            if ($this->isEntityFragment($terms, $entityNames)) continue;
 
             $selected[] = $candidate;
             if (count($terms) > 1) {
@@ -147,6 +154,27 @@ final class FrequencyKeywordScorer implements KeywordScorer
         }
 
         return $selected;
+    }
+
+    /** @param list<string> $terms @param list<string> $entityNames */
+    private function isEntityFragment(array $terms, array $entityNames): bool
+    {
+        if (count($terms) < 2) {
+            return false;
+        }
+
+        foreach ($entityNames as $entityName) {
+            $entityTerms = explode(' ', $entityName);
+            if (count($entityTerms) <= count($terms) || $terms === $entityTerms) {
+                continue;
+            }
+
+            if (array_diff($terms, $entityTerms) === []) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function length(string $value): int

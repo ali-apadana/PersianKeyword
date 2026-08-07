@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.4.0] - 2026-08-07
+
+### Added
+
+- Native recognition of a Persian person name when it appears immediately before an official title, such as `محمد باقر قالیباف رئیس مجلس`.
+- Native recognition of common multi-word government organizations, including `مجلس شورای اسلامی`, `شورای عالی امنیت ملی`, `قوه قضاییه`, and `نیروی انتظامی`.
+- Person-specific ranking boost and removal of phrase fragments that duplicate a stronger detected entity.
+
+### Improved
+
+- Filtered low-signal official and temporal words such as `رئیس`, `اخیر`, and `مقامات`, plus common colloquial verb forms such as `می‌خوان`.
+
 ## [2.3.0] - 2026-08-06
 
 ### Improved

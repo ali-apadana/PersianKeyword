@@ -2,7 +2,7 @@
 
 `ali-apadana/persian-keyword` is a Laravel-first package for extracting keywords, important phrases, and dictionary-based named entities from Persian (Farsi) text.
 
-**Version 2.2 provides native phrase-aware ranking, organization recognition, and sport-event recognition.** It remains fully PHP/Laravel based and requires no external service.
+**Version 2.4 provides native phrase-aware ranking, person and organization recognition, and sport-event recognition.** It remains fully PHP/Laravel based and requires no external service.
 
 HTML content is supported: tags are removed and entities such as `&zwnj;` and `&nbsp;` are decoded before extraction.
 
@@ -48,6 +48,8 @@ $json = $result->toJson();
 The extractor ranks meaningful phrases alongside single terms. For example, a title containing `حمله سایبری به سیستم‌های آبرسانی ۱۲ ایالت آمریکا` prioritizes `حمله سایبری`, `آمریکا`, and `آبرسانی` instead of standalone numbers or generic heads such as `سیستم`.
 
 It also recognizes organization phrases without requiring a dictionary entry. For example, `باشگاه استقلال` is detected as an `organization` entity and receives a ranking boost.
+
+Names that immediately precede an official title are detected as people. For example, `محمد باقر قالیباف رئیس مجلس` detects `محمد باقر قالیباف` as a `person`; government organizations such as `مجلس شورای اسلامی` are also recognized as complete entities.
 
 Common sport events such as `جام ملت‌های آسیا`, `جام جهانی`, `لیگ برتر`, and `بازی‌های المپیک` are also recognized as `event` entities and receive an additional ranking boost.
 

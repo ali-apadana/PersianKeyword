@@ -53,6 +53,7 @@ final class PersianTokenizerTest extends TestCase
         self::assertTrue($tokenizer->isStopword('نیست'));
         self::assertTrue($tokenizer->isStopword('می‌تواند'));
         self::assertTrue($tokenizer->isStopword('نمی‌توانند'));
+        self::assertTrue($tokenizer->isStopword('می‌خوان'));
         self::assertFalse($tokenizer->isStopword('انرژی'));
     }
 

@@ -67,4 +67,22 @@ final class ExtractionTest extends TestCase
         self::assertSame(['حمله سایبری', 'آمریکا', 'آبرسانی'], array_slice($result->keywords(), 0, 3));
         self::assertNotContains('گرفته‌اند', $result->keywords());
     }
+
+    public function test_it_promotes_people_and_government_organizations_and_filters_low_signal_official_terms(): void
+    {
+        $result = Keyword::extract(
+            'محمد باقر قالیباف رئیس مجلس شورای اسلامی در واکنش به ادعاهای اخیر مقامات آمریکا به دیپلماسی نمایشی اشاره کرد.',
+            'رئیس مجلس شورای اسلامی در واکنش به ادعاهای اخیر مقامات آمریکا، نوشت: این دیپلماسی نمایشی، شکست خورده است.',
+            ['max_keywords' => 5],
+        );
+
+        self::assertContains('محمد باقر قالیباف', $result->keywords());
+        self::assertContains('مجلس شورای اسلامی', $result->keywords());
+        self::assertContains('دیپلماسی نمایشی', $result->keywords());
+        self::assertContains('آمریکا', $result->keywords());
+        self::assertNotContains('اخیر مقامات', $result->keywords());
+        self::assertNotContains('اخیر مقامات آمریکا', $result->keywords());
+        self::assertNotContains('رئیس مجلس شورای', $result->keywords());
+        self::assertNotContains('مجلس شورای', $result->keywords());
+    }
 }
