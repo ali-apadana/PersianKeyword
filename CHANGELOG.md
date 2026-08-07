@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.9.0] - 2026-08-07
+
+### Added
+
+- Native recognition of a ranked person name such as `سرلشکر محسن رضایی`.
+- Built-in entities for `تنگه هرمز`, `بانک مرکزی`, `کیف پول ایران`, `پرداخت الکترونیکی`, `کدهای دستوری`, and `تلفن همراه`.
+
+### Improved
+
+- Filtered low-signal phrases built around `اجازه باز` and `گام تازه`.
+
 ## [2.8.0] - 2026-08-07
 
 ### Added

@@ -37,6 +37,8 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
 
     private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s*(?:[»”"]\s*)?(?:رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار|اندیشمند|استاد|پژوهشگر|نویسنده|شاعر)(?![\p{L}\p{N}]))/u';
 
+    private const PERSON_AFTER_RANK_PATTERN = '/(?<![\p{L}\p{N}])(?:سرلشکر|سرتیپ|دکتر|مهندس)\s+([\p{L}][\p{L}\x{200C}-]*\s+[\p{L}][\p{L}\x{200C}-]*)(?=\s+(?:تاکید|گفت|اظهار|اعلام|نوشت)|\s*[،:])/u';
+
     /** @var list<string> */
     private const FACILITY_PATTERNS = [
         '/(?<![\p{L}\p{N}])پالایشگاه\s+(?:اول|دوم|سوم|چهارم|پنجم|[\p{N}]+)\s+پارس\s+جنوبی(?![\p{L}\p{N}])/u',
@@ -88,6 +90,10 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         foreach ($this->recognizePeopleBeforeOfficialTitles($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizePeopleAfterRanks($text, $source) as $entity) {
             $entities[] = $entity;
         }
 
@@ -200,6 +206,14 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         return $entities;
+    }
+
+    /** @return list<Entity> */
+    private function recognizePeopleAfterRanks(string $text, string $source): array
+    {
+        if (preg_match_all(self::PERSON_AFTER_RANK_PATTERN, $text, $matches) < 1) return [];
+
+        return array_map(static fn (string $name): Entity => new Entity($name, 'person', $source), $matches[1]);
     }
 
     private function removeLeadingNonNameWord(string $candidate): string
