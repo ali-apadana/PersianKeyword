@@ -208,4 +208,20 @@ final class ExtractionTest extends TestCase
         self::assertContains('پاورلیفتینگ آسیا', $result->keywords());
         self::assertNotContains('اندام مرکز', $result->keywords());
     }
+
+    public function test_it_preserves_complete_commission_boundaries_and_final_text_phrase(): void
+    {
+        $result = Keyword::extract(
+            'چارچوب کلی تفاهم با عمان مشخص شده است',
+            'سخنگوی کمیسیون امنیت ملی و سیاست خارجی مجلس گفت: چارچوب کلی تفاهم با عمان مشخص شده و به زودی متن نهایی و جزئیات هم بیان می‌شود.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('چارچوب کلی تفاهم', $result->keywords());
+        self::assertContains('عمان', $result->keywords());
+        self::assertContains('کمیسیون امنیت ملی و سیاست خارجی مجلس', $result->keywords());
+        self::assertContains('متن نهایی', $result->keywords());
+        self::assertNotContains('خارجی مجلس', $result->keywords());
+        self::assertNotContains('زودی متن', $result->keywords());
+    }
 }

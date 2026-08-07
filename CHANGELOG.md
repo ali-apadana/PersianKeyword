@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.4.0] - 2026-08-07
+
+### Improved
+
+- Completed the entity boundary for `کمیسیون امنیت ملی و سیاست خارجی مجلس`.
+- Filtered the temporal word `زودی` and promoted `متن نهایی` as a complete news phrase.
+- Prevented fragments such as `خارجی مجلس` and `زودی متن`.
+
 ## [3.3.0] - 2026-08-07
 
 ### Added
