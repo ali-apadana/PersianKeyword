@@ -35,7 +35,7 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         '/(?<![\p{L}\p{N}])نیروی\s+انتظامی(?![\p{L}\p{N}])/u',
     ];
 
-    private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s*(?:[»”"]\s*)?(?:رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار|اندیشمند|استاد|پژوهشگر|نویسنده|شاعر)(?![\p{L}\p{N}]))/u';
+    private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s*(?:[»”"]\s*)?(?:رئیس(?:\x{200C})?جمهور|رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار|اندیشمند|استاد|پژوهشگر|نویسنده|شاعر)(?![\p{L}\p{N}]))/u';
 
     private const PERSON_AFTER_RANK_PATTERN = '/(?<![\p{L}\p{N}])(?:سرلشکر|سرتیپ|دکتر|مهندس)\s+([\p{L}][\p{L}\x{200C}-]*\s+[\p{L}][\p{L}\x{200C}-]*)(?=\s+(?:تاکید|گفت|اظهار|اعلام|نوشت)|\s*[،:])/u';
 
