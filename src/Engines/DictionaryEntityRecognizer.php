@@ -43,6 +43,17 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
     ];
 
     /** @var list<string> */
+    private const SPORT_TEAM_PATTERNS = [
+        '/(?<![\p{L}\p{N}])تیم\s+ملی\s+فوتبال\s+ایران(?![\p{L}\p{N}])/u',
+        '/(?<![\p{L}\p{N}])[\p{L}][\p{L}\x{200C}-]*\s+بلاروس(?![\p{L}\p{N}])/u',
+    ];
+
+    /** @var list<string> */
+    private const SPORT_ACTION_PATTERNS = [
+        '/(?<![\p{L}\p{N}])اخراج(?![\p{L}\p{N}])/u',
+    ];
+
+    /** @var list<string> */
     private const NON_NAME_WORDS_BEFORE_A_ROLE = [
         'درگذشت', 'تسلیت', 'پیام', 'پیامی', 'مرحوم', 'شادروان', 'زنده‌یاد',
     ];
@@ -75,6 +86,14 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         foreach ($this->recognizeFacilities($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizePatternEntities($text, $source, self::SPORT_TEAM_PATTERNS, 'sports_club') as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizePatternEntities($text, $source, self::SPORT_ACTION_PATTERNS, 'event') as $entity) {
             $entities[] = $entity;
         }
 

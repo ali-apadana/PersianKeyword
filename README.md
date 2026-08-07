@@ -57,6 +57,8 @@ The native facility rules recognize numbered South Pars refineries such as `پا
 
 Common sport events such as `جام ملت‌های آسیا`, `جام جهانی`, `لیگ برتر`, and `بازی‌های المپیک` are also recognized as `event` entities and receive an additional ranking boost.
 
+Sports support also recognizes `تیم ملی فوتبال ایران`, club-country names such as `ویتبسک بلاروس`, and disciplinary events such as `اخراج`.
+
 Pass options for a single extraction when needed:
 
 ```php

@@ -103,6 +103,9 @@ final class FrequencyKeywordScorer implements KeywordScorer
                 'event' => (float) ($this->options['event_boost'] ?? 4.0),
                 'person' => (float) ($this->options['person_boost'] ?? 4.0),
                 'facility' => (float) ($this->options['facility_boost'] ?? 5.0),
+                'sports_club' => str_starts_with($name, 'تیم ملی ')
+                    ? (float) ($this->options['national_team_boost'] ?? 7.0)
+                    : (float) ($this->options['sports_club_boost'] ?? 4.0),
                 'organization' => $this->length($name) >= 15
                     ? (float) ($this->options['long_organization_boost'] ?? 5.0)
                     : $boost,

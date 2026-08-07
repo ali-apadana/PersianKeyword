@@ -46,6 +46,8 @@ return [
         'person_boost' => 4.0,
         'facility_boost' => 5.0,
         'long_organization_boost' => 5.0,
+        'sports_club_boost' => 4.0,
+        'national_team_boost' => 7.0,
     ],
 
     'entity_recognition' => [

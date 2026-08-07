@@ -118,4 +118,19 @@ final class ExtractionTest extends TestCase
         self::assertNotContains('تبلیغات اسلامی', $result->keywords());
         self::assertNotContains('اسلامی درپی', $result->keywords());
     }
+
+    public function test_it_recognizes_sport_teams_clubs_and_disciplinary_events(): void
+    {
+        $result = Keyword::extract(
+            'شروع تلخ مدافع تیم ملی پس از جدایی از پرسپولیس',
+            'مدافع تیم ملی فوتبال ایران، نخستین حضورش در ترکیب اصلی ویتبسک بلاروس را با چشیدن طعم اخراج پشت سر گذاشت.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('تیم ملی فوتبال ایران', $result->keywords());
+        self::assertContains('ویتبسک بلاروس', $result->keywords());
+        self::assertContains('پرسپولیس', $result->keywords());
+        self::assertContains('اخراج', $result->keywords());
+        self::assertNotContains('تلخ مدافع', $result->keywords());
+    }
 }

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.7.0] - 2026-08-07
+
+### Added
+
+- Native recognition for `تیم ملی فوتبال ایران`, a club-country form such as `ویتبسک بلاروس`, and the disciplinary event `اخراج`.
+- Built-in entries for `پرسپولیس` and `بلاروس`.
+
+### Improved
+
+- Sports-team ranking and filtering of generic sports-role and narrative terms such as `مدافع`, `تلخ`, and `پشت سر`.
+
 ## [2.6.0] - 2026-08-07
 
 ### Added
