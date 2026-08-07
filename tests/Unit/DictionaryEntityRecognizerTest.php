@@ -57,4 +57,15 @@ final class DictionaryEntityRecognizerTest extends TestCase
         self::assertContains(['name' => 'محمد باقر قالیباف', 'type' => 'person', 'source' => 'title'], $entities);
         self::assertContains(['name' => 'مجلس شورای اسلامی', 'type' => 'organization', 'source' => 'title'], $entities);
     }
+
+    public function test_it_recognizes_a_numbered_pars_south_refinery_as_a_facility(): void
+    {
+        $recognizer = new DictionaryEntityRecognizer();
+
+        $entities = $recognizer->recognize('بازسازی پالایشگاه سوم پارس جنوبی کلید خورد.', 'title');
+
+        self::assertCount(1, $entities);
+        self::assertSame('پالایشگاه سوم پارس جنوبی', $entities[0]->name());
+        self::assertSame('facility', $entities[0]->type());
+    }
 }

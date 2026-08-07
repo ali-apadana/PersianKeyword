@@ -85,4 +85,21 @@ final class ExtractionTest extends TestCase
         self::assertNotContains('رئیس مجلس شورای', $result->keywords());
         self::assertNotContains('مجلس شورای', $result->keywords());
     }
+
+    public function test_it_recognizes_refinery_projects_and_industrial_organization_names(): void
+    {
+        $result = Keyword::extract(
+            'بازسازی پالایشگاه سوم پارس جنوبی کلید خورد',
+            'آیین امضای توافق‌نامه پروژه بازسازی پالایشگاه فازهای ۴ و ۵ پارس جنوبی با حضور مدیرعامل سازمان گسترش و نوسازی صنایع ایران (ایدرو) و اعضای کنسرسیوم بازسازی این پروژه در منطقه پارس برگزار شد.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('پالایشگاه سوم پارس جنوبی', $result->keywords());
+        self::assertContains('پارس جنوبی', $result->keywords());
+        self::assertContains('سازمان گسترش و نوسازی صنایع ایران', $result->keywords());
+        self::assertContains('ایدرو', $result->keywords());
+        self::assertNotContains('سازمان گسترش', $result->keywords());
+        self::assertNotContains('جنوبی کلید', $result->keywords());
+        self::assertNotContains('جنوبی کلید خورد', $result->keywords());
+    }
 }

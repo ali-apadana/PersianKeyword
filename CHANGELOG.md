@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.5.0] - 2026-08-07
+
+### Added
+
+- Native facility recognition for numbered South Pars refineries, such as `پالایشگاه سوم پارس جنوبی`.
+- Built-in industrial organization entries for `سازمان گسترش و نوسازی صنایع ایران` and `ایدرو`.
+- Stronger ranking for complete, long organization names.
+
+### Improved
+
+- Filtered the low-signal news idiom `کلید خورد`.
+- Prevented a shortened dynamic organization match such as `سازمان گسترش` when a longer dictionary organization name is present.
+
 ## [2.4.0] - 2026-08-07
 
 ### Added

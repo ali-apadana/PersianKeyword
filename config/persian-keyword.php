@@ -44,6 +44,8 @@ return [
         'entity_boost' => 3.0,
         'event_boost' => 4.0,
         'person_boost' => 4.0,
+        'facility_boost' => 5.0,
+        'long_organization_boost' => 5.0,
     ],
 
     'entity_recognition' => [

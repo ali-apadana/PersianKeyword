@@ -16,7 +16,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
         'موارد', 'وضعیت', 'فرآیند', 'اقدام', 'ایالت', 'شهرستان',
     ];
 
-    /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float, person_boost?: float} $options */
+    /** @param array{title_weight?: float, body_weight?: float, title_phrase_weight?: float, body_phrase_weight?: float, entity_boost?: float, event_boost?: float, person_boost?: float, facility_boost?: float, long_organization_boost?: float} $options */
     public function __construct(private readonly array $options = [], private readonly int $minKeywordLength = 2)
     {
     }
@@ -102,6 +102,10 @@ final class FrequencyKeywordScorer implements KeywordScorer
             $scores[$name]['score'] += match ($entity->type()) {
                 'event' => (float) ($this->options['event_boost'] ?? 4.0),
                 'person' => (float) ($this->options['person_boost'] ?? 4.0),
+                'facility' => (float) ($this->options['facility_boost'] ?? 5.0),
+                'organization' => $this->length($name) >= 15
+                    ? (float) ($this->options['long_organization_boost'] ?? 5.0)
+                    : $boost,
                 default => $boost,
             };
         }
@@ -160,6 +164,10 @@ final class FrequencyKeywordScorer implements KeywordScorer
     private function isEntityFragment(array $terms, array $entityNames): bool
     {
         if (count($terms) < 2) {
+            return false;
+        }
+
+        if (in_array(implode(' ', $terms), $entityNames, true)) {
             return false;
         }
 

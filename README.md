@@ -51,6 +51,8 @@ It also recognizes organization phrases without requiring a dictionary entry. Fo
 
 Names that immediately precede an official title are detected as people. For example, `محمد باقر قالیباف رئیس مجلس` detects `محمد باقر قالیباف` as a `person`; government organizations such as `مجلس شورای اسلامی` are also recognized as complete entities.
 
+The native facility rules recognize numbered South Pars refineries such as `پالایشگاه سوم پارس جنوبی`. The built-in entity dictionary also includes the Industrial Development and Renovation Organization of Iran and its acronym, `ایدرو`.
+
 Common sport events such as `جام ملت‌های آسیا`, `جام جهانی`, `لیگ برتر`, and `بازی‌های المپیک` are also recognized as `event` entities and receive an additional ranking boost.
 
 Pass options for a single extraction when needed:

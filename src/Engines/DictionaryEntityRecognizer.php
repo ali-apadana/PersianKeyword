@@ -37,6 +37,11 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
 
     private const PERSON_BEFORE_OFFICIAL_TITLE_PATTERN = '/(?<![\p{L}\p{N}])((?:[\p{L}][\p{L}\x{200C}-]*\s+){1,2}[\p{L}][\p{L}\x{200C}-]*)(?=\s+(?:رئیس|وزیر|دبیر|فرمانده|سخنگو|استاندار|شهردار)(?![\p{L}\p{N}]))/u';
 
+    /** @var list<string> */
+    private const FACILITY_PATTERNS = [
+        '/(?<![\p{L}\p{N}])پالایشگاه\s+(?:اول|دوم|سوم|چهارم|پنجم|[\p{N}]+)\s+پارس\s+جنوبی(?![\p{L}\p{N}])/u',
+    ];
+
     /** @param array<string, list<string>> $dictionary */
     public function __construct(private readonly array $dictionary = [])
     {
@@ -61,6 +66,10 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
         }
 
         foreach ($this->recognizePeopleBeforeOfficialTitles($text, $source) as $entity) {
+            $entities[] = $entity;
+        }
+
+        foreach ($this->recognizeFacilities($text, $source) as $entity) {
             $entities[] = $entity;
         }
 
@@ -95,10 +104,28 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
                 continue;
             }
 
-            $entities[] = new Entity(trim($match[1].' '.$match[2]), 'organization', $source);
+            $name = trim($match[1].' '.$match[2]);
+            if ($this->isPrefixOfDictionaryOrganization($name)) {
+                continue;
+            }
+
+            $entities[] = new Entity($name, 'organization', $source);
         }
 
         return $entities;
+    }
+
+    private function isPrefixOfDictionaryOrganization(string $name): bool
+    {
+        $prefix = $this->lowercase($name).' ';
+
+        foreach ($this->dictionary['organization'] ?? [] as $organization) {
+            if (str_starts_with($this->lowercase($organization), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @return list<Entity> */
@@ -136,6 +163,12 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
             static fn (string $name): Entity => new Entity($name, 'person', $source),
             $matches[1],
         );
+    }
+
+    /** @return list<Entity> */
+    private function recognizeFacilities(string $text, string $source): array
+    {
+        return $this->recognizePatternEntities($text, $source, self::FACILITY_PATTERNS, 'facility');
     }
 
     /** @param list<string> $patterns @return list<Entity> */
