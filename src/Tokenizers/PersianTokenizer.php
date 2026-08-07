@@ -16,6 +16,8 @@ final class PersianTokenizer implements TextTokenizer
         '/^(?:ن?می‌?)?(?:خواه(?:م|ی|د|یم|ید|ند)|خوا(?:م|ی|د|یم|ید|ن|ند))$/u',
         '/^ب?نوش(?:م|ی|یم|ید|ند)?$/u',
         '/^(?:ن?می‌?)?گیر(?:م|ی|د|یم|ید|ند)$/u',
+        '/^(?:در)?آمد(?:م|ی|یم|ید|ند)?$/u',
+        '/^پیوست(?:م|ی|یم|ید|ند)?$/u',
         // Past participles with a Persian personal ending: گرفته‌اند، کرده‌ایم، شده است.
         '/^[\p{L}]+ه(?:\x{200C})?(?:ام|ای|ایم|اید|اند|است)$/u',
         // Frequent simple-past reporting and auxiliary verbs, with their personal endings.

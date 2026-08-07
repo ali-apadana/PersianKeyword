@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.1.0] - 2026-08-07
+
+### Added
+
+- Quality-regression coverage for security and sports news examples.
+- Built-in entities for `نیروهای مسلح عراق`, `حشد شعبی`, and `پانتولیکوس یونان`.
+
+### Improved
+
+- Native filtering for common past verbs such as `درآمدند` and `پیوست`.
+
+## [3.0.0] - 2026-08-07
+
+### Added
+
+- Structured native entities for major news organizations, people, and recurring news concepts.
+
 ## [2.9.0] - 2026-08-07
 
 ### Added

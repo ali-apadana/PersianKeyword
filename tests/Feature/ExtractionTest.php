@@ -157,4 +157,26 @@ final class ExtractionTest extends TestCase
         self::assertContains('دانشگاه علوم پزشکی تهران', $health->keywords());
         self::assertNotContains('بنوشید سرطان', $health->keywords());
     }
+
+    public function test_quality_regression_for_security_and_sport_news(): void
+    {
+        $security = Keyword::extract(
+            'نیروهای مسلح عراق به حال آماده‌باش درآمدند',
+            'همزمان با نزدیک شدن به پایان مهلت گروه‌های مقاومت عراق به بغداد برای پاسخ به تجاوز آمریکایی-سعودی به مقرهای حشد شعبی، دستور افزایش سطح آماده‌باش امنیتی و نظامی در این کشور صادر شد.',
+            ['max_keywords' => 10],
+        );
+        self::assertContains('نیروهای مسلح عراق', $security->keywords());
+        self::assertContains('حشد شعبی', $security->keywords());
+        self::assertContains('آماده‌باش امنیتی', $security->keywords());
+        self::assertNotContains('حال آماده‌باش', $security->keywords());
+
+        $sport = Keyword::extract(
+            'بازیکن خارجی استقلال راهی فوتبال یونان شد',
+            'وینگر مالیایی فصل گذشته استقلال، پس از پایان همکاری با آبی‌پوشان و جدایی از این تیم، با امضای قراردادی رسمی به پانتولیکوس یونان پیوست.',
+            ['max_keywords' => 10],
+        );
+        self::assertContains('پانتولیکوس یونان', $sport->keywords());
+        self::assertContains('بازیکن خارجی استقلال', $sport->keywords());
+        self::assertNotContains('استقلال راهی', $sport->keywords());
+    }
 }
