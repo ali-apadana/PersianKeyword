@@ -194,4 +194,18 @@ final class ExtractionTest extends TestCase
         self::assertNotContains('آمریکا توسط', $result->keywords());
         self::assertNotContains('آمریکا توسط سپاه', $result->keywords());
     }
+
+    public function test_it_keeps_long_sport_organizations_and_terms_intact(): void
+    {
+        $result = Keyword::extract(
+            'کیهان خورشیدی نائب رئیس هیئت پرورش اندام مرکز استان شد',
+            'قهرمان و رکورد دار پاورلیفتینگ آسیا و قویترین مرد شمال کشور، رئیس فعلی کمیته ورزش های قدرتی استان از سوابق کیهان خورشیدی است.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('کیهان خورشیدی', $result->keywords());
+        self::assertContains('هیئت پرورش اندام مرکز استان', $result->keywords());
+        self::assertContains('پاورلیفتینگ آسیا', $result->keywords());
+        self::assertNotContains('اندام مرکز', $result->keywords());
+    }
 }

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.3.0] - 2026-08-07
+
+### Added
+
+- Built-in sport entities for `کیهان خورشیدی`, `هیئت پرورش اندام مرکز استان`, `پاورلیفتینگ آسیا`, and `قوی‌ترین مرد شمال کشور`.
+
+### Improved
+
+- Preserved complete multi-word sports organizations instead of returning fragments such as `اندام مرکز`.
+
 ## [3.2.0] - 2026-08-07
 
 ### Added
