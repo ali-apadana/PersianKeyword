@@ -240,4 +240,21 @@ final class ExtractionTest extends TestCase
         self::assertNotContains('تلویزیون بازگشت', $result->keywords());
         self::assertNotContains('ساخت', $result->keywords());
     }
+
+    public function test_it_rejects_meaningless_person_supersets_and_keeps_transfer_concepts(): void
+    {
+        $result = Keyword::extract(
+            'مقصد بعدی رامین رضاییان بالاخره معلوم شد',
+            'پس از جدایی ناگهانی و غیرمنتظره رامین رضاییان از استقلال، راه برای باشگاه‌های خواهان این بازیکن باز شد و فولاد خوزستان اکنون جدی‌ترین مشتری او به شمار می‌رود.',
+            ['max_keywords' => 10],
+        );
+
+        self::assertContains('رامین رضاییان', $result->keywords());
+        self::assertContains('فولاد خوزستان', $result->keywords());
+        self::assertContains('استقلال', $result->keywords());
+        self::assertContains('مقصد بعدی', $result->keywords());
+        self::assertContains('جدایی از استقلال', $result->keywords());
+        self::assertNotContains('بعدی رامین رضاییان', $result->keywords());
+        self::assertNotContains('رامین رضاییان بالاخره', $result->keywords());
+    }
 }

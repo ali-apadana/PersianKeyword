@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.6.0] - 2026-08-08
+
+### Added
+
+- Built-in entities for `رامین رضاییان`, `فولاد خوزستان`, `استقلال`, and `مقصد بعدی`.
+- Canonical recognition for `جدایی از استقلال`.
+
+### Improved
+
+- Rejected longer meaningless phrases that merely wrap a complete person name.
+- Filtered low-signal terms such as `بالاخره` and `معلوم`.
+
 ## [3.5.0] - 2026-08-07
 
 ### Added

@@ -134,9 +134,16 @@ final class DictionaryEntityRecognizer implements EntityRecognizer
     /** @return list<Entity> */
     private function recognizeCanonicalRelations(string $text, string $source): array
     {
-        if (preg_match('/(?<![\p{L}\p{N}])(?:بازگشت\s+به\s+تلویزیون|به\s+تلویزیون\s+بازگشت)(?![\p{L}\p{N}])/u', $text) !== 1) return [];
+        $entities = [];
+        if (preg_match('/(?<![\p{L}\p{N}])(?:بازگشت\s+به\s+تلویزیون|به\s+تلویزیون\s+بازگشت)(?![\p{L}\p{N}])/u', $text) === 1) {
+            $entities[] = new Entity('بازگشت به تلویزیون', 'event', $source);
+        }
 
-        return [new Entity('بازگشت به تلویزیون', 'event', $source)];
+        if (preg_match('/(?<![\p{L}\p{N}])جدایی.{0,80}?از\s+استقلال(?![\p{L}\p{N}])/u', $text) === 1) {
+            $entities[] = new Entity('جدایی از استقلال', 'event', $source);
+        }
+
+        return $entities;
     }
 
     /** @return list<Entity> */

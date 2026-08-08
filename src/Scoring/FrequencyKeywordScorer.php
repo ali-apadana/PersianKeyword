@@ -66,6 +66,10 @@ final class FrequencyKeywordScorer implements KeywordScorer
             $ranked,
             $limit,
             array_map(static fn (Entity $entity): string => $entity->name(), $entities),
+            array_map(
+                static fn (Entity $entity): string => $entity->name(),
+                array_values(array_filter($entities, static fn (Entity $entity): bool => $entity->type() === 'person')),
+            ),
         );
     }
 
@@ -144,8 +148,8 @@ final class FrequencyKeywordScorer implements KeywordScorer
         return in_array($stem, self::GENERIC_HEADS, true);
     }
 
-    /** @param list<KeywordScore> $ranked @param list<string> $entityNames @return list<KeywordScore> */
-    private function selectNonOverlapping(array $ranked, int $limit, array $entityNames): array
+    /** @param list<KeywordScore> $ranked @param list<string> $entityNames @param list<string> $personNames @return list<KeywordScore> */
+    private function selectNonOverlapping(array $ranked, int $limit, array $entityNames, array $personNames): array
     {
         $selected = [];
         $coveredTerms = [];
@@ -154,7 +158,7 @@ final class FrequencyKeywordScorer implements KeywordScorer
             $terms = explode(' ', $candidate->keyword());
 
             if (count($terms) === 1 && isset($coveredTerms[$terms[0]])) continue;
-            if ($this->isEntityFragment($terms, $entityNames)) continue;
+            if ($this->isEntityFragment($terms, $entityNames, $personNames)) continue;
 
             $selected[] = $candidate;
             if (count($terms) > 1) {
@@ -167,8 +171,8 @@ final class FrequencyKeywordScorer implements KeywordScorer
         return $selected;
     }
 
-    /** @param list<string> $terms @param list<string> $entityNames */
-    private function isEntityFragment(array $terms, array $entityNames): bool
+    /** @param list<string> $terms @param list<string> $entityNames @param list<string> $personNames */
+    private function isEntityFragment(array $terms, array $entityNames, array $personNames): bool
     {
         if (count($terms) < 2) {
             return false;
@@ -176,6 +180,11 @@ final class FrequencyKeywordScorer implements KeywordScorer
 
         if (in_array(implode(' ', $terms), $entityNames, true)) {
             return false;
+        }
+
+        foreach ($personNames as $personName) {
+            $personTerms = explode(' ', $personName);
+            if (count($terms) > count($personTerms) && array_diff($personTerms, $terms) === []) return true;
         }
 
         foreach ($entityNames as $entityName) {
